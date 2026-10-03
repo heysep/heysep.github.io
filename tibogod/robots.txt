@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://heysep.github.io/tibogod/sitemap.xml
