@@ -5,20 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>소개 — 공부 노트</title>
 <meta name="description" content="이 블로그가 무엇이고 글을 어떻게 쓰는지 짧게 적어요.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="공부 노트">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="소개 — 공부 노트">
+<meta property="og:description" content="이 블로그가 무엇이고 글을 어떻게 쓰는지 짧게 적어요.">
 <meta name="color-scheme" content="light dark">
-<link rel="canonical" href="https://heysep.github.io/notes/about/">
-<link rel="alternate" type="application/atom+xml" title="공부 노트" href="https://heysep.github.io/notes/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1D21" media="(prefers-color-scheme: dark)">
+<link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
+<!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="../assets/favicon.svg"> 를 여기에 -->
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
 <link rel="stylesheet" href="../assets/notes.css">
+<script src="../assets/notes.js" defer></script>
 </head>
 <body>
-<header class="site-head"><div class="wrap">
-<a class="site-name" href="../">공부 노트</a>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-head"><div class="in">
+<a class="brand" href="../"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a>
 <nav class="site-nav" aria-label="사이트"><a href="../">글 목록</a><a href="../about/" aria-current="page">소개</a><a href="../feed.xml">RSS</a></nav>
 </div></header>
-<main class="wrap">
+<main id="main" class="page">
 <h1>소개</h1>
 <p>개발자예요. 공부하고 만들면서 배운 것을, 나중에 내가 다시 읽을 수 있게 적어 둬요. 요즘은 RAG(검색 증강 생성)를 직접 만들면서 부딪힌 문제들이 글감이에요.</p>
 <h2>글을 쓰는 규칙</h2>
@@ -30,6 +37,9 @@
 </ul>
 <p>RSS 로 구독할 수 있어요. <a href="../feed.xml">feed.xml</a></p>
 </main>
-<footer class="site-foot"><div class="wrap">개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 IBM Plex(SIL OFL 1.1)예요.</div></footer>
+<footer class="site-foot"><div class="in">
+<div><a class="brand" href="../"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a><p>개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 IBM Plex(SIL OFL 1.1)예요.</p></div>
+<nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
+</div></footer>
 </body>
 </html>

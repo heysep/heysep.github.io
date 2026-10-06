@@ -5,28 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공부 노트 — 공부하고 만들면서 배운 기술 기록</title>
 <meta name="description" content="공부하고 만들면서 배운 기술을 기록하는 개인 블로그예요.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="공부 노트">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="공부 노트 — 공부하고 만들면서 배운 기술 기록">
+<meta property="og:description" content="공부하고 만들면서 배운 기술을 기록하는 개인 블로그예요.">
 <meta name="color-scheme" content="light dark">
-<link rel="canonical" href="https://heysep.github.io/notes/">
-<link rel="alternate" type="application/atom+xml" title="공부 노트" href="https://heysep.github.io/notes/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1D21" media="(prefers-color-scheme: dark)">
+<link rel="alternate" type="application/atom+xml" title="공부 노트" href="feed.xml">
+<!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="assets/favicon.svg"> 를 여기에 -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/notes.css">
+<script src="assets/notes.js" defer></script>
 </head>
 <body>
-<header class="site-head"><div class="wrap">
-<a class="site-name" href="./">공부 노트</a>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-head"><div class="in">
+<a class="brand" href="./"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a>
 <nav class="site-nav" aria-label="사이트"><a href="./" aria-current="page">글 목록</a><a href="./about/">소개</a><a href="./feed.xml">RSS</a></nav>
 </div></header>
-<main class="wrap">
-<h1>공부 노트</h1>
-<p class="lead">공부하고 만들면서 배운 기술을 기록해요. 지금은 RAG(검색 증강 생성)를 만들며 고민한 것들이 중심이에요.</p>
-<ul class="post-list">
-<li><time datetime="2026-10-06">2026-10-06 · 읽는 데 6분</time><a class="t" href="chunking-by-format/">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요</a><p>표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</p></li>
-<li><time datetime="2026-10-06">2026-10-06 · 읽는 데 6분</time><a class="t" href="can-i-trust-this-answer/">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</a><p>근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.</p></li>
-<li><time datetime="2026-10-06">2026-10-06 · 읽는 데 7분</time><a class="t" href="why-i-skipped-rls/">행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기</a><p>여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</p></li>
+<main id="main">
+<section class="hero">
+<h1>만들면서 배운 것을, 나중에 다시 읽으려고 적어요</h1>
+<p>공부하고 만들면서 배운 기술을 기록해요. 지금은 RAG(검색 증강 생성)를 만들며 고민한 것들이 중심이에요.</p>
+<ul class="chips" aria-label="다루는 주제"><li class="chip">RAG</li><li class="chip">청킹</li><li class="chip">근거와 인용</li><li class="chip">데이터 격리</li><li class="chip">PostgreSQL</li></ul>
+</section>
+<section class="list" aria-label="글 목록">
+<ul class="cards">
+<li class="feat"><a class="card" href="./chunking-by-format/"><ul class="chips"><li class="chip">검색 품질</li><li class="chip quiet">청킹</li><li class="chip quiet">RAG</li></ul><h3>청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요</h3><p>표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</p><span class="foot"><time datetime="2026-10-06">2026년 10월 6일</time><span>읽는 데 6분</span><span class="go" aria-hidden="true">읽기</span></span></a></li>
+<li><a class="card" href="./can-i-trust-this-answer/"><ul class="chips"><li class="chip">답의 신뢰</li><li class="chip quiet">근거</li><li class="chip quiet">인용</li></ul><h3>이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</h3><p>근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.</p><span class="foot"><time datetime="2026-10-06">2026년 10월 6일</time><span>읽는 데 6분</span><span class="go" aria-hidden="true">읽기</span></span></a></li>
+<li><a class="card" href="./why-i-skipped-rls/"><ul class="chips"><li class="chip">설계 결정</li><li class="chip quiet">데이터 격리</li><li class="chip quiet">PostgreSQL</li></ul><h3>행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기</h3><p>여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</p><span class="foot"><time datetime="2026-10-06">2026년 10월 6일</time><span>읽는 데 7분</span><span class="go" aria-hidden="true">읽기</span></span></a></li>
 </ul>
+</section>
+<section class="topics"><h2>이런 걸 기록해요</h2>
+<ul class="topic-grid">
+<li><h3>검색 품질</h3><p>자료를 어떻게 자르고 색인하느냐에 따라 같은 질문의 답이 달라져요. 잘못 잘린 자리를 눈으로 찾아본 기록이에요.</p><a href="chunking-by-format/" aria-label="청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요 읽기">이 주제의 글 읽기</a></li>
+<li><h3>답의 신뢰</h3><p>근거가 없을 때 없다고 말하게 하고, 인용이 진짜인지 서버가 확인하게 하는 방법을 적어요.</p><a href="can-i-trust-this-answer/" aria-label="이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기 읽기">이 주제의 글 읽기</a></li>
+<li><h3>설계 결정</h3><p>선택지를 놓고 실험하고, 무엇을 고르고 무엇을 버렸는지 이유와 함께 남겨요.</p><a href="why-i-skipped-rls/" aria-label="행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기 읽기">이 주제의 글 읽기</a></li>
+</ul></section>
+<section class="rules"><h2>글을 쓰는 규칙</h2>
+<ul>
+<li><strong>확인한 것만 써요</strong>시도하고 확인한 것만 적고, 못 한 건 「확인 못 했어요」라고 적어요.</li>
+<li><strong>예시는 지어낸 것이에요</strong>실제 고객이나 대화 데이터는 쓰지 않아요.</li>
+<li><strong>출처를 달아요</strong>다른 도구의 동작은 공식 문서를 확인하고 링크를 달아요.</li>
+</ul></section>
 </main>
-<footer class="site-foot"><div class="wrap">개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 IBM Plex(SIL OFL 1.1)예요.</div></footer>
+<footer class="site-foot"><div class="in">
+<div><a class="brand" href="./"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a><p>개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 IBM Plex(SIL OFL 1.1)예요.</p></div>
+<nav aria-label="푸터"><a href="./">글 목록</a><a href="./about/">소개</a><a href="./feed.xml">RSS</a></nav>
+</div></footer>
 </body>
 </html>
