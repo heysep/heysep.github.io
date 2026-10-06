@@ -1,0 +1,51 @@
+<p style="margin:0 0 1.6em;font-size:1.08em;line-height:1.9;color:#222">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p>
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">왜 RLS 가 끌렸을까요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">한 DB 에 여러 고객을 두는 방식에서는 모든 조회에 「이 고객의 데이터만」이라는 조건을 붙여야 해요. 코드를 짜는 사람이 한 번만 깜빡해도 조건이 빠진 조회가 생기고, 그 조회는 남의 행까지 돌려줘요. RLS 는 이 조건을 DB 가 대신 강제해 줘요. 내가 깜빡해도 DB 가 막아 주는 「안전망」이라서 처음엔 당연히 써야 한다고 생각했어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">그런데 공식 문서를 읽어 보니 기본 동작부터 조심할 것이 있었어요. PostgreSQL 문서(18.6 판)는 이렇게 말해요.</p>
+<blockquote><p style="margin:0 0 1.1em;line-height:1.9">Superusers and roles with the <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">BYPASSRLS</code> attribute always bypass the row security system when accessing a table. Table owners normally bypass row security as well, though a table owner can choose to be subject to row security with ALTER TABLE ... FORCE ROW LEVEL SECURITY.</p></blockquote>
+<p style="margin:0 0 1.1em;line-height:1.9">출처: <a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">PostgreSQL 문서, Row Security Policies</a>. 풀어 쓰면, 슈퍼유저와 우회 권한이 있는 역할은 항상 정책을 건너뛰고, 표 주인도 기본은 건너뛰어요. 앱이 DB 에 어떤 역할로 접속하느냐에 따라 안전망이 통째로 꺼질 수 있다는 뜻이에요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">결과를 보기 전에 합격선부터 적었어요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">RLS 를 좋아하는 마음으로 실험하면 결과도 좋게 읽게 돼요. 그래서 측정하기 전에 <strong>후보와 합격선을 먼저 문서에 적고 고정</strong>했어요. 결과를 본 뒤에는 그 부분을 고치지 않는다는 규칙이에요. 후보는 네 가지였어요. RLS 없이 앱 계층을 강화하는 것, 일부 표에만 RLS, 모든 표에 RLS, 그리고 나중에 정하기예요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">살펴본 관문은 이런 것들이에요. 실제로 새는 사례를 막아 주는지, 검색이 느려지지 않는지, 검색 재현율이 떨어지지 않는지, 적재 속도가 유지되는지, 기동과 마이그레이션이 되는지, 그리고 설정을 깜빡한 연결에서도 「닫혀 있는지」예요. 실험 데이터는 전부 지어낸 것이고 외부 호출 없이 로컬에서만 돌렸어요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">RLS 는 잘 막았어요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">공정하게 적어 두면, RLS 는 약속한 일을 했어요. 앱의 조건이 빠진 사례를 일부러 만들어 돌리면 RLS 아래에서는 남의 행이 나오지 않았고, 설정을 안 건 새 연결은 0행이거나 오류로 닫혔어요. 백그라운드 작업이나 앱 코드 바깥의 SQL 처럼 앱 계층 방어로는 못 잡는 사례도 막았어요. 검색 재현율도 달라지지 않았고, 정책 자체가 속도에 주는 부담은 거의 없었어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">속도에서 불합격이 나온 건 정책 때문이 아니었어요. 질의마다 트랜잭션을 따로 열고 「지금 어느 고객인지」를 설정하는 <strong>래퍼</strong> 때문이었어요. 아주 작은 조회에서는 그 오버헤드가 두 배를 넘었어요. 요청 하나를 트랜잭션 하나로 묶으면 부담이 작아져서, 이건 설계를 바꾸면 풀리는 문제였어요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">그런데 조용히 틀렸어요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">결정을 바꾼 건 속도가 아니라 <strong>조용히 틀리는 곳</strong>이었어요.</p>
+<div style="margin:1.6em 0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.95em">
+<thead><tr><th style="background:#111111;color:#fff;text-align:left;padding:10px 12px">상황</th><th style="background:#111111;color:#fff;text-align:left;padding:10px 12px">정책을 걸면</th></tr></thead>
+<tbody>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">조직 전체의 저장량을 합산하는 한도 검사</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">정책이 다른 컬렉션의 행을 숨겨서 합계가 실제보다 줄어요. 한도를 넘는 업로드가 통과해요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">정책을 켠 뒤 돌리는 데이터 이전 작업</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">표 주인 역할로 돌면 0행을 보고 오류 없이 아무것도 안 해요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">(모든 표에 걸 때) 로그인 때 해시로 사용자를 찾는 조회</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">누구의 데이터인지 알기 전이라 설정을 못 걸어서 0행이에요. 우회 역할이 필요해요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">기존 시험 묶음을 정책 아래에서 돌리면</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">삼분의 일 가까이가 설정 없이는 닫혀서 실패해요(누수는 없었어요)</td></tr>
+</tbody></table></div>
+<p style="margin:0 0 1.1em;line-height:1.9">첫 번째가 결정적이었어요. 닫히면 오류가 나서 알 수 있어요. 그런데 합계를 내는 코드에서는 정책이 행을 조용히 숨기니까 <strong>오류가 아니라 틀린 값</strong>이 나와요. 한도 검사가 열린 채로 틀려요. 이 질의는 업로드와 조회마다 부르는 요청 경로라서, 고치려면 우회 역할을 쓰거나 조직 단위 정책을 새로 만들어야 했어요. 우회 역할을 쓰면 그 경로에서는 RLS 가 없는 거고, 조직 단위 정책은 검색에 붙는 서브쿼리라 속도를 재 보지 못했어요. 이 부분은 확인 못 했어요. 또 정책을 건 표에서는 키워드 검색의 실행 계획이 바뀌는 것도 봤는데, 왜 그런지 공식 문서와 대조하지 못해서 이유는 확인 못 했어요.</p>
+
+<aside class="decision">
+<div class="k">DECISION</div>
+<div class="in">
+<h3>RLS 는 넣지 않고, 앱 계층에서 조건 누락을 막는다</h3>
+<dl>
+<dt>왜</dt><dd>요청 경로의 조직 단위 질의가 RLS 아래에서 닫히지 않고 조용히 틀려요. 우회 역할을 쓰면 보호가 없어져요.</dd>
+<dt>버린 것</dt><dd>일부 표에만 RLS, 모든 표에 RLS.</dd>
+<dt>다시 볼 때</dt><dd>앱 계층을 강화한 뒤에도 교차 고객 누수가 한 번이라도 발견될 때, 조직 단위 질의를 요청 경로에서 치울 수 있을 때, DB 접속 역할을 어차피 나눌 때요.</dd>
+</dl>
+</div>
+</aside>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">그래서 앱 계층에서 이렇게 막아요</h2>
+<ul style="margin:0 0 1.2em;padding-left:1.3em;line-height:1.9">
+<li style="margin:.3em 0">조건 없는 쿼리를 코드에서 못 쓰게 하는 장치를 만들었어요. 고객 범위가 정해진 핸들로만 DB 에 접근하게 해서, 조건을 빼먹으면 컴파일이나 시험에서 먼저 걸려요.</li>
+<li style="margin:.3em 0">「고객 A 의 자격으로 모든 경로를 고객 B 의 id 로 호출」해 보는 시험을 만들었어요. 응답이 없는 id 와 똑같아야 하고, B 의 데이터는 하나도 바뀌지 않아야 해요.</li>
+<li style="margin:.3em 0">새 쿼리가 허용 목록에 없는 방식으로 조건 없이 들어오면 시험이 실패하는 정적 검사를 넣었어요.</li>
+</ul>
+<p style="margin:0 0 1.1em;line-height:1.9">이 선택이 <strong>못 막는 것</strong>도 분명해요. RLS 가 막아 줄 백그라운드 작업, 앱 코드 바깥의 SQL, 응답 시간 같은 부수 채널은 앱 계층 방어로는 못 막아요. RLS 는 「미래의 실수에 대한 보험」이고, 그 보험을 안 들기로 한 거예요. 코드를 훑어 본 결과 지금까지 조건이 빠진 곳은 확인되지 않았지만, 이 조사는 소스의 문자열을 읽는 근사라서 동적으로 이어 붙인 쿼리는 못 봐요. 그리고 실험 당시에 「앱 계층이 이 사례를 잡는가」 칸은 실제로 돌려 본 게 아니라 내 판단이었어요. 그건 확인 못 했어요. 교차 호출 시험은 그 뒤에 만들었어요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">격리는 검색 품질 문제이기도 해요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">이 공부에서 하나 더 배운 게 있어요. 격리는 보안만이 아니라 검색 품질에도 걸려 있어요. 벡터 검색의 근사 인덱스는 조건 필터를 인덱스를 훑은 <em>뒤에</em> 적용해요. pgvector 의 README 도 이렇게 적어요. 「With approximate indexes, filtering is applied after the index is scanned.」 그래서 고객이 많아서 필터가 걸러 내는 비율이 커지면 돌려주는 결과가 모자라질 수 있어요. 같은 문서가 고객 격리에는 파티션이나 표 분리를 권해요(<a href="https://github.com/pgvector/pgvector/blob/master/README.md">pgvector README</a>).</p>
+<p style="margin:0 0 1.1em;line-height:1.9">그래서 고객 한 명의 데이터 크기를 바꿔 가며 재현율을 따로 쟀고, 작은 고객은 인덱스를 거치지 않고 정확하게 찾도록 바꿨어요. 이 측정은 합성 벡터로만 했고 실제 임베딩, 운영 규모, 동시 접속은 확인 못 했어요. 큰 고객의 재현율 손실은 어떤 설정으로도 속도 기준을 지키며 해결하지 못해서 그대로 남아 있어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">돌아보면 RLS 를 안 쓰기로 한 것보다 중요한 건, 결과를 보기 전에 합격선을 적어 두었다는 점이에요. 마음에 드는 도구여도 실험 결과가 반대로 나올 수 있고, 그때 접을 수 있는 이유를 미리 만들어 둔 셈이에요.</p>

@@ -1,0 +1,58 @@
+<p style="margin:0 0 1.6em;font-size:1.08em;line-height:1.9;color:#222">AI 에게 일을 시키면서 「다 됐습니다」라는 말을 믿어도 되나 싶은 순간이 여러 번 있었어요. 규칙을 문서에 적어 두는 것으로는 안 지켜졌고, 그래서 규칙 일부를 훅(hook)으로 옮겼어요. 어떤 것을 옮겼고 무엇은 못 덮는지 적어 둬요.</p>
+<div style="margin:0 0 2em;padding:18px 22px;border:2px solid #111111;border-radius:12px;box-shadow:6px 6px 0 #C6F432"><strong style="display:block;margin-bottom:8px;font-size:.85em;letter-spacing:.08em">핵심 요약</strong><ul style="margin:0;padding-left:1.2em;line-height:1.8"><li style="margin:.3em 0">문서에 적은 규칙은 길게 이어진 작업에서 빠졌고, 빠졌다는 사실도 응답에서 보이지 않았어요.</li><li style="margin:.3em 0">세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 마지막 테스트가 마지막 소스 편집보다 뒤에 있는지를 봐요.</li><li style="margin:.3em 0">훅이 못 덮는 것(셸로 한 편집 등)은 코드에 적어 뒀고, 결함이 얼마나 줄었는지는 수치로 재지 못했어요.</li></ul></div>
+<figure style="margin:1.6em 0"><img src="https://heysep.github.io/notes/assets/img/hero-hook.webp" alt="상자가 검사 게이트를 지나가고, 체크 표시가 없는 상자만 차단봉에 막혀 있는 일러스트" style="display:block;width:100%;height:auto;border:1px solid #e3e3e3;border-radius:10px;background:#fff"><figcaption style="margin-top:6px;font-size:.85em;color:#505050">체크가 없는 것은 통과하지 못해요 · ChatGPT 이미지 생성으로 만든 일러스트</figcaption></figure>
+
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">문서에 적은 규칙은 안 지켜졌어요</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">처음에는 「고친 뒤에는 테스트를 돌려라」 같은 규칙을 스킬 문서에 적었어요. 모델은 그 문서를 읽고 대체로 따르지만, 항상은 아니에요. 길게 이어진 작업일수록 중간에 빠졌고, 빠졌다는 사실도 응답에서는 보이지 않았어요. 규칙이 지켜졌는지를 모델의 자기보고로 확인하는 건 확인이 아니라는 걸 알게 됐어요.</p>
+<figure style="margin:1.6em 0"><img src="https://heysep.github.io/notes/assets/img/hook-rules.webp" alt="책장에 규칙 문서가 꽂혀 있는데, 상자들이 그 옆 컨베이어를 그냥 지나가는 일러스트" style="display:block;width:100%;height:auto;border:1px solid #e3e3e3;border-radius:10px;background:#fff"><figcaption style="margin-top:6px;font-size:.85em;color:#505050">규칙 문서는 책장에 있고, 일은 그 옆을 그냥 지나가요 · ChatGPT 이미지 생성</figcaption></figure>
+
+<p style="margin:0 0 1.1em;line-height:1.9">그래서 기준을 바꿨어요. <strong>지켜졌는지를 기록으로 판정할 수 있는 규칙만 코드로 옮긴다</strong>예요. 「좋은 코드를 써라」는 코드로 옮길 수 없지만 「소스를 고친 뒤에 테스트 명령이 한 번이라도 돌았는가」는 옮길 수 있어요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">Claude Code 는 턴이 끝날 때(Stop)와 도구를 쓰기 직전(PreToolUse)에 사용자가 지정한 명령을 실행할 수 있어요. 이 명령이 세션 기록 파일(JSONL)의 경로를 받아요. 기록에는 도구 호출이 시간순으로 쌓여 있어서 「무엇을 언제 했는가」를 사실로 읽을 수 있어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">Stop 훅이 하는 일은 단순해요. 기록을 처음부터 읽으면서 두 가지를 순서대로 기록해요.</p>
+<ul style="margin:0 0 1.2em;padding-left:1.3em;line-height:1.9">
+<li style="margin:.3em 0">소스 파일(<code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">.py</code>, <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">.dart</code>, <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">.ts</code> 등)을 편집한 도구 호출과 그 순번</li>
+<li style="margin:.3em 0">테스트 명령(<code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">pytest</code>, <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">flutter test</code>, <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">npm test</code> 등)을 실행한 도구 호출과 그 순번</li>
+</ul>
+<p style="margin:0 0 1.1em;line-height:1.9">그리고 <strong>마지막 테스트보다 뒤에 편집된 소스 파일</strong>이 있으면 목록으로 알려요. 「테스트를 몇 번 돌렸나」가 아니라 「마지막 테스트가 마지막 편집을 덮었나」를 보는 거예요. 편집 → 테스트 → 편집이면 마지막 편집은 검증되지 않은 것으로 쳐요.</p>
+<figure style="margin:1.6em 0"><img src="https://heysep.github.io/notes/assets/img/hook-sequence.webp" alt="연필로 편집한 문서에 체크, 시험관으로 테스트해 체크, 마지막 연필로 편집한 문서에는 물음표가 붙은 순서도" style="display:block;width:100%;height:auto;border:1px solid #e3e3e3;border-radius:10px;background:#fff"><figcaption style="margin-top:6px;font-size:.85em;color:#505050">편집 → 테스트 → 편집이면, 마지막 편집(물음표)은 검증되지 않은 것이에요 · ChatGPT 이미지 생성</figcaption></figure>
+
+<pre style="margin:1.4em 0;padding:16px;background:#f1f1f1;border-radius:8px;overflow-x:auto;line-height:1.65;font-size:.9em"><code>def untested_edits(transcript_path):
+    last_test_seq = 0
+    edits = {}  # 경로 -> 마지막으로 편집한 순번
+    for seq, name, inp in iter_tool_uses(transcript_path):
+        if ran_tests(name, inp):
+            last_test_seq = seq
+        elif is_source_edit(name, inp):
+            edits[inp["file_path"]] = seq
+    return sorted(p for p, s in edits.items() if s &gt; last_test_seq)</code></pre>
+<p style="margin:0 0 1.1em;line-height:1.9">같은 판정 함수를 커밋 직전 훅도 써요. 소스를 고친 뒤 테스트가 한 번도 안 돌았으면 <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">git commit</code> 을 막아요. 판정을 한 곳에 두면 두 훅이 서로 다른 말을 할 일이 없어요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">일부러 좁게 만든 부분</h2>
+<p style="margin:0 0 1.1em;line-height:1.9">이 훅은 아는 것만 판정해요. 몇 군데는 일부러 덮지 않았어요.</p>
+<div style="margin:1.6em 0;overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.95em">
+<thead><tr><th style="background:#111111;color:#fff;text-align:left;padding:10px 12px">덮지 않는 것</th><th style="background:#111111;color:#fff;text-align:left;padding:10px 12px">이유</th></tr></thead>
+<tbody>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">린트·정적 분석 실행</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">타입이 맞는 것과 동작이 맞는 것은 다른 축이라서 테스트로 치지 않아요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">문서·설정만 고친 경우</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">소스 확장자만 편집으로 세요. 문서를 고쳤다고 테스트를 요구하면 게이트가 아니라 방해가 돼요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">셸로 한 편집(<code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">sed -i</code>, 리다이렉션)</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">기록에는 Bash 호출로만 남고 어떤 파일이 바뀌었는지 알 수 없어요. 알려진 사각지대로 코드에 적어 뒀어요</td></tr>
+<tr><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">기록 파일을 못 읽는 경우</td><td style="padding:10px 12px;border-bottom:1px solid #e3e3e3;vertical-align:top">통과시켜요. 훅이 고장 났다고 사용자의 작업이 막히면 안 돼서, 못 읽으면 열어 두는 쪽으로 실패해요</td></tr>
+</tbody></table></div>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">막을지 알릴지는 따로 정했어요</h2>
+
+<figure style="margin:1.6em 0"><img src="https://heysep.github.io/notes/assets/img/hook-warn-block.webp" alt="왼쪽은 램프가 켜져도 상자가 지나가고, 오른쪽은 차단봉이 상자를 막는 두 상태와 위쪽의 전환 스위치" style="display:block;width:100%;height:auto;border:1px solid #e3e3e3;border-radius:10px;background:#fff"><figcaption style="margin-top:6px;font-size:.85em;color:#505050">왼쪽은 알리기만 하고(지금 설정), 오른쪽은 막아요. 스위치는 설정 한 줄이에요 · ChatGPT 이미지 생성</figcaption></figure>
+<p style="margin:0 0 1.1em;line-height:1.9">Stop 훅은 지금 알리기만 하고 막지는 않아요(<code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">MODE = "warn"</code>). 이 설정이 전역이라 동시에 열려 있는 다른 세션에도 바로 적용되는데, 남의 작업 중간을 막는 건 이 훅이 할 일이 아니라고 봤어요. 막는 모드(exit code 2 로 턴을 되돌리고 이유를 모델에게 돌려주는 방식)도 구현해 뒀지만 켜지 않았어요. 켜면 어떻게 되는지는 아직 확인하지 못했어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">비밀 파일 보호 훅은 반대로 막아요. <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">.env</code>, <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">.secrets/</code>, 서명 키 같은 파일을 Edit/Write 로 덮어쓰려는 시도를 거절해요. 읽는 것은 막지 않아요. 막으려는 건 값을 보는 일이 아니라 덮어써서 자격증명을 잃는 일이라서요. 경로를 부분 문자열이 아니라 <strong>경로 구간</strong>으로 비교해요. 부분 문자열로 하면 <code style="background:#f1f1f1;padding:1px 5px;border-radius:4px">secrets_page.dart</code> 같은 평범한 소스가 걸려서, 실제로 그럴 뻔했어요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">이 훅들에는 테스트도 붙였어요. 「편집 뒤 테스트가 돌았으면 통과」 「편집 → 테스트 → 편집이면 여전히 미검증」 「문서만 고쳤으면 무시」 「기록 파일이 없으면 통과」 같은 경우를 케이스로 나눠 확인해요.</p>
+
+<h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">배운 것</h2>
+<ul style="margin:0 0 1.2em;padding-left:1.3em;line-height:1.9">
+<li style="margin:.3em 0">규칙을 문서에 적는 것과 강제하는 것은 달라요. 기록으로 판정할 수 있는 규칙만 훅으로 옮겨요.</li>
+<li style="margin:.3em 0">판정은 「횟수」가 아니라 「순서」로 해요. 마지막 편집이 마지막 검증보다 뒤인가를 봐요.</li>
+<li style="margin:.3em 0">훅이 못 덮는 것은 코드 주석에 적어 둬요. 안 적으면 훅이 통과시킨 것을 검증된 것으로 착각하게 돼요.</li>
+<li style="margin:.3em 0">처음부터 막지 말고 먼저 알리기만 해요. 오탐이 얼마나 나는지 보고 나서 막는 쪽으로 올려요.</li>
+</ul>
+<p style="margin:0 0 1.1em;line-height:1.9">확인하지 못한 것도 있어요. 이 훅으로 실제 결함이 줄었는지는 수치로 비교하지 못했어요. 지금 말할 수 있는 건 「테스트 없이 끝나는 턴이 기록에서 보이게 됐다」까지예요.</p>

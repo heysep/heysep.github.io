@@ -1,0 +1,12 @@
+{
+  "slug": "why-i-skipped-rls",
+  "title": "행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기",
+  "description": "여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.",
+  "tags": [
+    "데이터 격리",
+    "PostgreSQL",
+    "설계 결정"
+  ],
+  "category": "RAG",
+  "date": "2026-10-06"
+}

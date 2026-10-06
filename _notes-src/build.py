@@ -285,6 +285,10 @@ open(os.path.join(OUT,'sitemap.xml'),'w',encoding='utf-8').write('<?xml version=
 open(os.path.join(ROOT,'robots.txt'),'w',encoding='utf-8').write('User-agent: *\nAllow: /\n\nSitemap: '+SITE+'sitemap.xml\n')
 llm='# '+NAME+'\n\n> '+SCOPE+' 직접 만들고 확인한 것만 쓰고, 못 잰 것은 못 쟀다고 적는 개인 기록이다. 작성자: heysep.\n\n## 글\n'+''.join(f"- [{q['title']}]({SITE}{q['slug']}/): {q['desc']}\n" for q in posts)+'\n## 기타\n- [소개]('+SITE+'about/)\n- [RSS]('+SITE+'feed.xml)\n'
 open(os.path.join(ROOT,'llms.txt'),'w',encoding='utf-8').write(llm)
+
+# 티스토리 변환용 글 목록(to_tistory.py 가 읽는다)
+os.makedirs(os.path.join(B,'tistory'),exist_ok=True)
+json.dump([{k:q.get(k) for k in ('slug','src','title','desc','tags','cat','category','date','tldr')} for q in posts],open(os.path.join(B,'tistory','posts.json'),'w',encoding='utf-8'),ensure_ascii=False,indent=1)
 # feed
 ents=''.join(f'''<entry>
 <title>{html.escape(p['title'])}</title>
