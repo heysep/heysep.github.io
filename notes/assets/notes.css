@@ -1,0 +1,64 @@
+/* 공부 노트 — 학습 노트 조밀형. 색은 아래 토큰만 바꾸면 돼요. 글꼴은 IBM Plex(OFL 1.1). */
+:root {
+  --bg: #FFFFFF; --surface: #F6F8FA; --text: #24292F; --muted: #57606A; --accent: #0A5AA8; --border: #D0D7DE;
+  --sans: "IBM Plex Sans KR", "Pretendard Variable", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0F1319; --surface: #171C24; --text: #E6EDF3; --muted: #8D98A5; --accent: #5AA9FF; --border: #2D343E; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: break-word; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+.site-head { border-bottom: 1px solid var(--border); }
+.site-head .wrap { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding-top: 14px; padding-bottom: 12px; }
+.site-name { font-weight: 700; font-size: 17px; color: var(--text); border: 0; }
+.site-nav { font-family: var(--mono); font-size: 13px; display: flex; gap: 16px; }
+.site-nav a { color: var(--muted); border: 0; }
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--accent); }
+main.wrap { padding-top: 28px; padding-bottom: 56px; }
+h1 { font-size: 30px; line-height: 1.3; font-weight: 700; margin: 0 0 6px; }
+.meta { color: var(--muted); font-size: 13px; margin: 0 0 22px; font-family: var(--mono); }
+h2 { font-size: 22px; line-height: 1.4; font-weight: 600; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+p { margin: 0 0 14px; }
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--border); }
+a:hover { border-bottom-color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font-family: var(--mono); font-size: .875em; background: var(--surface); border: 1px solid var(--border); padding: .05em .35em; border-radius: 4px; }
+pre { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 14px; margin: 0 0 14px; overflow: auto; font: 13.5px/1.6 var(--mono); word-break: normal; }
+pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.table-wrap { overflow-x: auto; margin: 0 0 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.55; }
+th, td { text-align: left; padding: 6px 12px; border: 1px solid var(--border); vertical-align: top; }
+th { background: var(--surface); font-weight: 600; }
+tbody tr:nth-child(even) td { background: var(--surface); }
+ul, ol { margin: 0 0 14px; padding-left: 1.4em; }
+li { margin: 0 0 4px; }
+blockquote { margin: 0 0 14px; padding: 2px 14px; border-left: 3px solid var(--border); color: var(--muted); }
+.decision { border: 1px solid var(--border); border-radius: 6px; margin: 20px 0; overflow: hidden; }
+.decision .k { background: var(--surface); border-bottom: 1px solid var(--border); padding: 6px 14px; font: 600 12px/1.4 var(--mono); color: var(--muted); }
+.decision .in { padding: 10px 14px 12px; }
+.decision h3 { font-size: 16.5px; line-height: 1.5; font-weight: 600; margin: 0 0 8px; }
+.decision dl { display: grid; grid-template-columns: 6em 1fr; gap: 3px 10px; margin: 0; font-size: 15px; line-height: 1.6; }
+.decision dt { color: var(--muted); }
+.decision dd { margin: 0; }
+.post-list { list-style: none; margin: 0; padding: 0; }
+.post-list li { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.post-list time { display: block; font: 13px/1.4 var(--mono); color: var(--muted); }
+.post-list a.t { display: inline; font-size: 18px; font-weight: 600; line-height: 1.5; color: var(--text); border: 0; }
+.post-list a.t:hover { color: var(--accent); }
+.post-list p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.lead { color: var(--muted); margin-bottom: 8px; }
+.sources { font-size: 14px; color: var(--muted); }
+.sources a { color: var(--accent); }
+.post-foot { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
+.site-foot { border-top: 1px solid var(--border); font: 12.5px/1.6 var(--mono); color: var(--muted); }
+.site-foot .wrap { padding-top: 14px; padding-bottom: 28px; }
+@media (max-width: 480px) {
+  h1 { font-size: 26px; }
+  h2 { font-size: 20px; }
+  .decision dl { grid-template-columns: 1fr; gap: 0; }
+  .decision dt { margin-top: 6px; }
+}
