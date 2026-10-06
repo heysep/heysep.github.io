@@ -302,3 +302,8 @@ tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
 .hero-fig { margin: 1.4em 0 1.8em; }
 .hero-fig img { display: block; width: 100%; height: auto; border: 1px solid var(--soft); border-radius: 10px; background: #fff; }
 .hero-fig figcaption { margin-top: 6px; font: 500 12px/1.5 var(--mono); color: var(--meta); }
+
+.tldr { margin: 0 0 2em; padding: 18px 22px; border: 2px solid var(--ink); border-radius: 12px; background: #fff; box-shadow: 6px 6px 0 var(--hi); }
+.tldr h2 { margin: 0 0 8px; font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.tldr ul { margin: 0; padding-left: 1.2em; }
+.tldr li { margin: .35em 0; line-height: 1.65; }

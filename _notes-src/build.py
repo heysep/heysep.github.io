@@ -39,6 +39,10 @@ posts[3].update(cat='AI 작업 환경',tags=['훅','검증'])
 posts[4].update(cat='스킬 설계',tags=['스킬','검수'])
 posts[5].update(cat='앱 성과',tags=['앱인토스','광고'])
 posts[6].update(cat='병렬 에이전트',tags=['ORCA','워크트리'])
+posts[3]['tldr']=['문서에 적은 규칙은 길게 이어진 작업에서 빠졌고, 빠졌다는 사실도 응답에서 보이지 않았어요.','세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 마지막 테스트가 마지막 소스 편집보다 뒤에 있는지를 봐요.','훅이 못 덮는 것(셸로 한 편집 등)은 코드에 적어 뒀고, 결함이 얼마나 줄었는지는 수치로 재지 못했어요.']
+posts[4]['tldr']=['「다 됐어요」 순간에 스킬 셋이 겹쳐 걸려서, 증거 → 검수 → 응답 순서로 역할을 갈랐어요.','검수 스킬은 지적마다 반증을 시도하고 80점 미만을 버리며, 못 돌린 검사는 통과가 아니라 판정 불가로 적어요.','효과는 수치로 비교하지 못했고, 규칙 일부는 공개된 자료에서 가져왔어요.']
+posts[5]['tldr']=['청년미래적금과 적금 메이트가 앱인토스 「실시간 인기」에 오른 적이 있고, 순위는 시점이 붙은 스냅샷이에요.','제가 본 이유는 수요 선점, 차별점, 검색 최적화, 광고 최적화이고, 인과는 증명하지 못했어요.','중요했던 건 계산의 정확함, 답을 먼저 보여 주는 화면, 광고를 흐름이 끊기지 않는 시점에 붙이는 것이었어요.']
+posts[6]['tldr']=['한 세션에 여러 일을 시키면 맥락이 섞여서, ORCA로 에이전트마다 워크트리를 나눠 돌렸어요.','Claude Code는 구현, Codex(GPT)는 검증, OpenCode는 쉬운 작업을 맡겼어요.','병렬로 줄어든 시간과 검증의 효과는 수치로 재지 못했어요.']
 CODE_LABELS={('a.html',0):'CSV',('a.html',1):'JSON',('b.html',0):'화면 예시'}
 def dk(d):
     y,m,dd=d.split('-'); return f'{y}.{int(m):02d}.{int(dd):02d}'
@@ -53,7 +57,15 @@ posts[0]['hl']='형식마다 다르게'; posts[1]['hl']='근거가 없으면 없
 def title_html(p):
     t=html.escape(p['title']); h=html.escape(p['hl']); assert h in t
     return t.replace(h,'<mark>'+h+'</mark>',1)
-def head(title,desc,prefix,extra='',threed=False,section=''):
+import json
+def jl(d): return '<script type="application/ld+json">'+json.dumps(d,ensure_ascii=False).replace('</','<\\/')+'</script>'
+AUTHOR={'@type':'Person','name':'heysep','url':'https://github.com/heysep'}
+def head(title,desc,prefix,extra='',threed=False,section='',url='',image='',ld=''):
+    seo=''
+    if url: seo+=f'\n<link rel="canonical" href="{url}">\n<meta property="og:url" content="{url}">'
+    if image: seo+=f'\n<meta property="og:image" content="{image}">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:image" content="{image}">'
+    seo+='\n<meta name="author" content="heysep">\n<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">'
+    if ld: seo+='\n'+ld
     return f'''<!doctype html>
 <html lang="ko">
 <head>
@@ -65,7 +77,7 @@ def head(title,desc,prefix,extra='',threed=False,section=''):
 <meta property="og:site_name" content="{NAME}">
 <meta property="og:locale" content="ko_KR">{(chr(10)+'<meta property="article:section" content="'+html.escape(section)+'">') if section else ''}
 <meta property="og:title" content="{html.escape(title)}">
-<meta property="og:description" content="{html.escape(desc)}">
+<meta property="og:description" content="{html.escape(desc)}">{seo}
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="alternate" type="application/atom+xml" title="{NAME}" href="{prefix}feed.xml">
@@ -155,7 +167,7 @@ def cats_html():
     if len(HAVE)<2: return ''
     b=lambda c,label,n,on='false':f'<button type="button" data-cat="{html.escape(c)}" aria-pressed="{on}"><span class="lb">{html.escape(label)}</span><span class="ct lb">{n:02d}</span></button>'
     return '<div class="cats" role="group" aria-label="분류로 거르기" hidden>'+b('all','All',len(posts),'true')+''.join(b(c,c,CNT[c]) for c in HAVE)+'</div>\n<p class="vh" role="status" aria-live="polite"></p>\n'
-w('index.html',head(NAME+' — RAG와 1인 앱 개발 공부 기록',SCOPE.replace('기록해요.','기록하는 개인 블로그예요.'),'',threed=True)
+w('index.html',head(NAME+' — RAG와 1인 앱 개발 공부 기록',SCOPE.replace('기록해요.','기록하는 개인 블로그예요.'),'',threed=True,url=SITE,image=SITE+'assets/og/_default.jpg',ld=jl({'@context':'https://schema.org','@type':'Blog','name':NAME,'url':SITE,'inLanguage':'ko','description':SCOPE,'author':AUTHOR,'blogPost':[{'@type':'BlogPosting','headline':q['title'],'url':SITE+q['slug']+'/','datePublished':q['date']} for q in posts]}))
  + top('./','list') + f'''<main id="main">
 <div class="blk hero-stage">
 <div class="blk-top"><span class="lb">Notes</span><span class="lb">2026 / {len(posts):02d} entries</span></div>
@@ -183,7 +195,7 @@ w('index.html',head(NAME+' — RAG와 1인 앱 개발 공부 기록',SCOPE.repla
 </main>
 '''+foot('./'))
 # about
-w('about/index.html',head('소개 — '+NAME,'RAG와 1인 앱 개발을 공부하고 만들면서 배운 것을 기록하는 블로그예요. 무엇을 다루고 글을 어떻게 쓰는지 짧게 적어요.','../')
+w('about/index.html',head('소개 — '+NAME,'RAG와 1인 앱 개발을 공부하고 만들면서 배운 것을 기록하는 블로그예요. 무엇을 다루고 글을 어떻게 쓰는지 짧게 적어요.','../',url=SITE+'about/',image=SITE+'assets/og/_default.jpg')
  + top('../','about') + f'''<main id="main">
 <div class="blk page-head"><div class="blk-top"><span class="lb">About</span><span class="lb">2026</span></div><h1>소개</h1></div>
 <div class="page"><aside class="lb">heysep</aside><div class="page-body">
@@ -235,7 +247,13 @@ for i,p in enumerate(posts):
     more=''
     if rest:
         more='<div class="sec-h"><h2>다른 글</h2></div><ul class="rows">'+''.join(row(q,'../') for q in rest)+'</ul>'
-    w(rel+'index.html',head(p['title']+' — '+NAME,p['desc'],'../','article',section=p['category'])
+    ogimg=SITE+'assets/og/'+(p['slug'] if os.path.exists(os.path.join(OUT,'assets','og',p['slug']+'.jpg')) else '_default')+'.jpg'
+    tl=p.get('tldr') or []
+    ld=jl({'@context':'https://schema.org','@graph':[
+      {'@type':'BlogPosting','headline':p['title'],'description':p['desc'],'abstract':' '.join(tl) if tl else p['desc'],'datePublished':p['date']+'T09:00:00+09:00','dateModified':p['date']+'T09:00:00+09:00','inLanguage':'ko','image':ogimg,'author':AUTHOR,'publisher':AUTHOR,'articleSection':p['category'],'keywords':p['tags']+[p['cat']],'mainEntityOfPage':SITE+rel,'url':SITE+rel,'isPartOf':{'@type':'Blog','name':NAME,'url':SITE}},
+      {'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':NAME,'item':SITE},{'@type':'ListItem','position':2,'name':p['title'],'item':SITE+rel}]}]})
+    tldr_html=('<aside class="tldr" aria-label="핵심 요약"><h2>핵심 요약</h2><ul>'+''.join(f'<li>{t}</li>' for t in tl)+'</ul></aside>\n') if tl else ''
+    w(rel+'index.html',head(p['title']+' — '+NAME,p['desc'],'../','article',section=p['category'],url=SITE+rel,image=ogimg,ld=ld)
       + top('../','') + f'''<div class="progress" aria-hidden="true"><i></i></div>
 <main id="main">
 <article>
@@ -249,7 +267,7 @@ for i,p in enumerate(posts):
 <div class="post-grid">
 <nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol>{tocl}</ol></nav>
 <div class="prose">
-<details class="toc-m"><summary>Contents</summary><ol>{tocl}</ol></details>
+{tldr_html}<details class="toc-m"><summary>Contents</summary><ol>{tocl}</ol></details>
 {body}</div>
 </div>
 </article>
@@ -259,6 +277,14 @@ for i,p in enumerate(posts):
 <a class="back" href="../">글 목록으로 돌아가기</a></div>
 </main>
 '''+foot('../'))
+
+# SEO/GEO: 사이트맵, robots.txt, llms.txt (저장소 루트에 새 파일만 둔다. 앱 폴더와 app-ads.txt 는 건드리지 않는다)
+ROOT=os.path.join(OUT,'..')
+urls=[(SITE,max(q['date'] for q in posts)),(SITE+'about/',max(q['date'] for q in posts))]+[(SITE+q['slug']+'/',q['date']) for q in posts]
+open(os.path.join(OUT,'sitemap.xml'),'w',encoding='utf-8').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n' for u,d in urls)+'</urlset>\n')
+open(os.path.join(ROOT,'robots.txt'),'w',encoding='utf-8').write('User-agent: *\nAllow: /\n\nSitemap: '+SITE+'sitemap.xml\n')
+llm='# '+NAME+'\n\n> '+SCOPE+' 직접 만들고 확인한 것만 쓰고, 못 잰 것은 못 쟀다고 적는 개인 기록이다. 작성자: heysep.\n\n## 글\n'+''.join(f"- [{q['title']}]({SITE}{q['slug']}/): {q['desc']}\n" for q in posts)+'\n## 기타\n- [소개]('+SITE+'about/)\n- [RSS]('+SITE+'feed.xml)\n'
+open(os.path.join(ROOT,'llms.txt'),'w',encoding='utf-8').write(llm)
 # feed
 ents=''.join(f'''<entry>
 <title>{html.escape(p['title'])}</title>

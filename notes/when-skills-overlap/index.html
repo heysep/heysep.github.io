@@ -11,6 +11,16 @@
 <meta property="article:section" content="1인 앱 개발">
 <meta property="og:title" content="스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요 — 공부 노트">
 <meta property="og:description" content="「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.">
+<link rel="canonical" href="https://heysep.github.io/notes/when-skills-overlap/">
+<meta property="og:url" content="https://heysep.github.io/notes/when-skills-overlap/">
+<meta property="og:image" content="https://heysep.github.io/notes/assets/og/when-skills-overlap.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://heysep.github.io/notes/assets/og/when-skills-overlap.jpg">
+<meta name="author" content="heysep">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요", "description": "「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.", "abstract": "「다 됐어요」 순간에 스킬 셋이 겹쳐 걸려서, 증거 → 검수 → 응답 순서로 역할을 갈랐어요. 검수 스킬은 지적마다 반증을 시도하고 80점 미만을 버리며, 못 돌린 검사는 통과가 아니라 판정 불가로 적어요. 효과는 수치로 비교하지 못했고, 규칙 일부는 공개된 자료에서 가져왔어요.", "datePublished": "2026-10-06T09:00:00+09:00", "dateModified": "2026-10-06T09:00:00+09:00", "inLanguage": "ko", "image": "https://heysep.github.io/notes/assets/og/when-skills-overlap.jpg", "author": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "publisher": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "articleSection": "1인 앱 개발", "keywords": ["스킬", "검수", "스킬 설계"], "mainEntityOfPage": "https://heysep.github.io/notes/when-skills-overlap/", "url": "https://heysep.github.io/notes/when-skills-overlap/", "isPartOf": {"@type": "Blog", "name": "공부 노트", "url": "https://heysep.github.io/notes/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "공부 노트", "item": "https://heysep.github.io/notes/"}, {"@type": "ListItem", "position": 2, "name": "스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요", "item": "https://heysep.github.io/notes/when-skills-overlap/"}]}]}</script>
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
@@ -38,6 +48,7 @@
 <div class="post-grid">
 <nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">스킬이 겹치면 매번 다른 게 걸려요</a></li><li><a href="#s2">UI 작업이나 영상 작업도 같은 방식으로 정리했어요</a></li><li><a href="#s3">검수 스킬 하나를 뜯어 보면</a></li><li><a href="#s4">문서로 쓴 규칙은 한계가 있어요</a></li><li><a href="#s5">배운 것</a></li></ol></nav>
 <div class="prose">
+<aside class="tldr" aria-label="핵심 요약"><h2>핵심 요약</h2><ul><li>「다 됐어요」 순간에 스킬 셋이 겹쳐 걸려서, 증거 → 검수 → 응답 순서로 역할을 갈랐어요.</li><li>검수 스킬은 지적마다 반증을 시도하고 80점 미만을 버리며, 못 돌린 검사는 통과가 아니라 판정 불가로 적어요.</li><li>효과는 수치로 비교하지 못했고, 규칙 일부는 공개된 자료에서 가져왔어요.</li></ul></aside>
 <details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">스킬이 겹치면 매번 다른 게 걸려요</a></li><li><a href="#s2">UI 작업이나 영상 작업도 같은 방식으로 정리했어요</a></li><li><a href="#s3">검수 스킬 하나를 뜯어 보면</a></li><li><a href="#s4">문서로 쓴 규칙은 한계가 있어요</a></li><li><a href="#s5">배운 것</a></li></ol></details>
 <h2 id="s1">스킬이 겹치면 매번 다른 게 걸려요<a class="anchor" href="#s1" aria-label="이 절의 링크">#</a></h2>
 <p>스킬은 설명 문장을 보고 모델이 골라 써요. 「완료」라는 순간에 걸리는 스킬이 증거 규칙, 코드 검수, 응답 점검 세 개였는데, 셋 다 비슷한 말(「다 됐다」)에 반응했어요. 그러면 어떤 날은 증거 규칙만, 어떤 날은 검수만 돌아요. 같은 상황에서 결과가 매번 달라지면 어느 쪽도 믿을 수 없어요.</p>

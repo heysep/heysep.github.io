@@ -11,6 +11,16 @@
 <meta property="article:section" content="1인 앱 개발">
 <meta property="og:title" content="에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요 — 공부 노트">
 <meta property="og:description" content="여러 일을 한 세션에서 시키니 맥락이 섞였어요. ORCA로 워크트리를 나누고 다른 모델에게 검증을 맡긴 과정과, 확인 못 한 것을 적어요.">
+<link rel="canonical" href="https://heysep.github.io/notes/parallel-agents-with-orca/">
+<meta property="og:url" content="https://heysep.github.io/notes/parallel-agents-with-orca/">
+<meta property="og:image" content="https://heysep.github.io/notes/assets/og/parallel-agents-with-orca.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://heysep.github.io/notes/assets/og/parallel-agents-with-orca.jpg">
+<meta name="author" content="heysep">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요", "description": "여러 일을 한 세션에서 시키니 맥락이 섞였어요. ORCA로 워크트리를 나누고 다른 모델에게 검증을 맡긴 과정과, 확인 못 한 것을 적어요.", "abstract": "한 세션에 여러 일을 시키면 맥락이 섞여서, ORCA로 에이전트마다 워크트리를 나눠 돌렸어요. Claude Code는 구현, Codex(GPT)는 검증, OpenCode는 쉬운 작업을 맡겼어요. 병렬로 줄어든 시간과 검증의 효과는 수치로 재지 못했어요.", "datePublished": "2026-10-07T09:00:00+09:00", "dateModified": "2026-10-07T09:00:00+09:00", "inLanguage": "ko", "image": "https://heysep.github.io/notes/assets/og/parallel-agents-with-orca.jpg", "author": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "publisher": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "articleSection": "1인 앱 개발", "keywords": ["ORCA", "워크트리", "병렬 에이전트"], "mainEntityOfPage": "https://heysep.github.io/notes/parallel-agents-with-orca/", "url": "https://heysep.github.io/notes/parallel-agents-with-orca/", "isPartOf": {"@type": "Blog", "name": "공부 노트", "url": "https://heysep.github.io/notes/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "공부 노트", "item": "https://heysep.github.io/notes/"}, {"@type": "ListItem", "position": 2, "name": "에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요", "item": "https://heysep.github.io/notes/parallel-agents-with-orca/"}]}]}</script>
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
@@ -38,6 +48,7 @@
 <div class="post-grid">
 <nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">한 세션으로는 안 돌아갔어요</a></li><li><a href="#s2">ORCA가 하는 일</a></li><li><a href="#s3">워크트리로 갈랐어요</a></li><li><a href="#s4">역할을 나눴어요</a></li><li><a href="#s5">GPT를 검증에 쓰니 실제로 잡힌 것</a></li><li><a href="#s6">한계와 못 한 것</a></li><li><a href="#s7">정리하면</a></li></ol></nav>
 <div class="prose">
+<aside class="tldr" aria-label="핵심 요약"><h2>핵심 요약</h2><ul><li>한 세션에 여러 일을 시키면 맥락이 섞여서, ORCA로 에이전트마다 워크트리를 나눠 돌렸어요.</li><li>Claude Code는 구현, Codex(GPT)는 검증, OpenCode는 쉬운 작업을 맡겼어요.</li><li>병렬로 줄어든 시간과 검증의 효과는 수치로 재지 못했어요.</li></ul></aside>
 <details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">한 세션으로는 안 돌아갔어요</a></li><li><a href="#s2">ORCA가 하는 일</a></li><li><a href="#s3">워크트리로 갈랐어요</a></li><li><a href="#s4">역할을 나눴어요</a></li><li><a href="#s5">GPT를 검증에 쓰니 실제로 잡힌 것</a></li><li><a href="#s6">한계와 못 한 것</a></li><li><a href="#s7">정리하면</a></li></ol></details>
 <figure class="hero-fig"><img src="../assets/img/orca-tree.webp" width="1200" height="800" alt="굵은 줄기가 세 갈래로 나뉘어 각자 폴더로 가고, 위 두 갈래는 검사 게이트를 거쳐 합쳐지며 아래 얇은 갈래는 따로 가는 일러스트" loading="lazy" decoding="async"><figcaption>한 줄기가 갈래로 나뉘어 각자 자기 폴더에서 일하고, 중요한 갈래만 검사 게이트를 거쳐 합쳐져요 · ChatGPT 이미지 생성</figcaption></figure>
 

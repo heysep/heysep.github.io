@@ -11,6 +11,16 @@
 <meta property="article:section" content="1인 앱 개발">
 <meta property="og:title" content="「다 됐어요」를 믿지 않으려고 훅을 만들었어요 — 공부 노트">
 <meta property="og:description" content="문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.">
+<link rel="canonical" href="https://heysep.github.io/notes/trust-the-record-not-the-report/">
+<meta property="og:url" content="https://heysep.github.io/notes/trust-the-record-not-the-report/">
+<meta property="og:image" content="https://heysep.github.io/notes/assets/og/trust-the-record-not-the-report.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://heysep.github.io/notes/assets/og/trust-the-record-not-the-report.jpg">
+<meta name="author" content="heysep">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "「다 됐어요」를 믿지 않으려고 훅을 만들었어요", "description": "문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.", "abstract": "문서에 적은 규칙은 길게 이어진 작업에서 빠졌고, 빠졌다는 사실도 응답에서 보이지 않았어요. 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 마지막 테스트가 마지막 소스 편집보다 뒤에 있는지를 봐요. 훅이 못 덮는 것(셸로 한 편집 등)은 코드에 적어 뒀고, 결함이 얼마나 줄었는지는 수치로 재지 못했어요.", "datePublished": "2026-10-06T09:00:00+09:00", "dateModified": "2026-10-06T09:00:00+09:00", "inLanguage": "ko", "image": "https://heysep.github.io/notes/assets/og/trust-the-record-not-the-report.jpg", "author": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "publisher": {"@type": "Person", "name": "heysep", "url": "https://github.com/heysep"}, "articleSection": "1인 앱 개발", "keywords": ["훅", "검증", "AI 작업 환경"], "mainEntityOfPage": "https://heysep.github.io/notes/trust-the-record-not-the-report/", "url": "https://heysep.github.io/notes/trust-the-record-not-the-report/", "isPartOf": {"@type": "Blog", "name": "공부 노트", "url": "https://heysep.github.io/notes/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "공부 노트", "item": "https://heysep.github.io/notes/"}, {"@type": "ListItem", "position": 2, "name": "「다 됐어요」를 믿지 않으려고 훅을 만들었어요", "item": "https://heysep.github.io/notes/trust-the-record-not-the-report/"}]}]}</script>
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
@@ -38,6 +48,7 @@
 <div class="post-grid">
 <nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">문서에 적은 규칙은 안 지켜졌어요</a></li><li><a href="#s2">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</a></li><li><a href="#s3">일부러 좁게 만든 부분</a></li><li><a href="#s4">막을지 알릴지는 따로 정했어요</a></li><li><a href="#s5">배운 것</a></li></ol></nav>
 <div class="prose">
+<aside class="tldr" aria-label="핵심 요약"><h2>핵심 요약</h2><ul><li>문서에 적은 규칙은 길게 이어진 작업에서 빠졌고, 빠졌다는 사실도 응답에서 보이지 않았어요.</li><li>세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 마지막 테스트가 마지막 소스 편집보다 뒤에 있는지를 봐요.</li><li>훅이 못 덮는 것(셸로 한 편집 등)은 코드에 적어 뒀고, 결함이 얼마나 줄었는지는 수치로 재지 못했어요.</li></ul></aside>
 <details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">문서에 적은 규칙은 안 지켜졌어요</a></li><li><a href="#s2">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</a></li><li><a href="#s3">일부러 좁게 만든 부분</a></li><li><a href="#s4">막을지 알릴지는 따로 정했어요</a></li><li><a href="#s5">배운 것</a></li></ol></details>
 <figure class="hero-fig"><img src="../assets/img/hero-hook.webp" width="1200" height="800" alt="상자가 검사 게이트를 지나가고, 체크 표시가 없는 상자만 차단봉에 막혀 있는 일러스트" decoding="async"><figcaption>체크가 없는 것은 통과하지 못해요 · ChatGPT 이미지 생성으로 만든 일러스트</figcaption></figure>
 

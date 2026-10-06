@@ -1,0 +1,16 @@
+# 공부 노트
+
+> RAG와 1인 앱 개발을 공부하고 만들면서 배운 것을 기록해요. 직접 만들고 확인한 것만 쓰고, 못 잰 것은 못 쟀다고 적는 개인 기록이다. 작성자: heysep.
+
+## 글
+- [청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요](https://heysep.github.io/notes/chunking-by-format/): 표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.
+- [이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기](https://heysep.github.io/notes/can-i-trust-this-answer/): 근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.
+- [행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기](https://heysep.github.io/notes/why-i-skipped-rls/): 여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.
+- [「다 됐어요」를 믿지 않으려고 훅을 만들었어요](https://heysep.github.io/notes/trust-the-record-not-the-report/): 문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.
+- [스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요](https://heysep.github.io/notes/when-skills-overlap/): 「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.
+- [앱인토스 순위에 든 두 앱, 커밋을 거꾸로 읽어 봤어요](https://heysep.github.io/notes/two-apps-in-toss-ranking/): 청년미래적금과 적금 메이트의 커밋 이력을 다시 읽고, 무엇이 중요했는지 정리해요. 순위는 시점이 붙은 스냅샷이라는 점부터 적어요.
+- [에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요](https://heysep.github.io/notes/parallel-agents-with-orca/): 여러 일을 한 세션에서 시키니 맥락이 섞였어요. ORCA로 워크트리를 나누고 다른 모델에게 검증을 맡긴 과정과, 확인 못 한 것을 적어요.
+
+## 기타
+- [소개](https://heysep.github.io/notes/about/)
+- [RSS](https://heysep.github.io/notes/feed.xml)
