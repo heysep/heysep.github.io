@@ -1,11 +1,12 @@
 <p class="lead">AI 에게 일을 시키는 규칙을 스킬(skill) 문서로 하나씩 만들다 보니, 어느 순간 「다 됐어요」 한 번에 스킬 서너 개가 동시에 걸렸어요. 겹치는 스킬은 있으나 마나가 아니라 믿을 수 없는 상태가 됐고, 그래서 서열을 정했어요. 그 과정과 검수 스킬 하나가 실제로 어떻게 생겼는지 적어 둬요.</p>
 
-<figure class="hero-fig"><img src="../assets/img/hero-skills.webp" width="1200" height="800" alt="서로 다른 세 개의 문을 차례로 지나며 문서가 도장을 하나씩 더 받는 일러스트" decoding="async"><figcaption>문은 순서대로, 문마다 한 가지만 물어요 · ChatGPT 이미지 생성으로 만든 일러스트</figcaption></figure>
 
 
 <h2>스킬이 겹치면 매번 다른 게 걸려요</h2>
 <p>스킬은 설명 문장을 보고 모델이 골라 써요. 「완료」라는 순간에 걸리는 스킬이 증거 규칙, 코드 검수, 응답 점검 세 개였는데, 셋 다 비슷한 말(「다 됐다」)에 반응했어요. 그러면 어떤 날은 증거 규칙만, 어떤 날은 검수만 돌아요. 같은 상황에서 결과가 매번 달라지면 어느 쪽도 믿을 수 없어요.</p>
 <p>해결은 스킬을 더 잘 쓰는 게 아니라 <strong>역할을 갈라서 순서를 정하는 것</strong>이었어요. 세 스킬에 각각 한 가지 질문만 맡겼어요.</p>
+<figure class="hero-fig"><img src="../assets/img/info-gates.webp" width="1200" height="800" alt="1 증거 돌렸나, 2 검수 맞나, 3 응답 잘 보여주나 세 단계를 화살표로 잇는 그림" loading="lazy" decoding="async"><figcaption>세 스킬은 질문을 하나씩만 맡고 순서대로 통과해요 · ChatGPT 이미지 생성</figcaption></figure>
+
 <div class="table-wrap"><table>
 <thead><tr><th>순서</th><th>질문</th><th>성격</th></tr></thead>
 <tbody>
@@ -23,6 +24,8 @@
 <pre><code>1. 실행하지 않은 명령의 결과는 주장할 수 없다.
 2. 확신도 80점 미만의 지적은 보고하지 않는다.</code></pre>
 <p>절차에서 효과가 컸다고 느낀 부분은 이래요. 다만 수치로 비교하지는 못했어요.</p>
+<figure class="hero-fig"><img src="../assets/img/info-filter.webp" width="1200" height="800" alt="지적 여러 개가 반증을 거치며 회색 지적은 버려지고 80점 이상만 남는 깔때기 그림" loading="lazy" decoding="async"><figcaption>지적마다 반증을 먼저 해 보고, 80점 미만은 버려요 · ChatGPT 이미지 생성</figcaption></figure>
+
 <ul>
 <li><strong>지적마다 반증을 먼저 시도해요.</strong> 「이건 오탐이다」를 증명해 보고 실패할 때만 살려요. 그리고 0~100점을 매겨 80 미만은 버려요. 버린 개수만 한 줄로 적어요.</li>
 <li><strong>지적에는 실패 시나리오가 있어야 해요.</strong> 「에러 처리 개선 필요」는 시나리오가 아니에요. 어떤 입력에서 어떤 잘못된 출력이 나오는지까지 써야 해요.</li>
