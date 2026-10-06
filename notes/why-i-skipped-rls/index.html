@@ -10,9 +10,8 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:title" content="행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기 — 공부 노트">
 <meta property="og:description" content="여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1C1D21" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
 <!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="../assets/favicon.svg"> 를 여기에 -->
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
@@ -22,21 +21,23 @@
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
 <header class="site-head"><div class="in">
-<a class="brand" href="../"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a>
+<a class="brand" href="../">공부 노트</a>
 <nav class="site-nav" aria-label="사이트"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
 </div></header>
 <div class="progress" aria-hidden="true"><i></i></div>
 <main id="main">
 <article>
-<header class="post-head">
-<ul class="chips"><li class="chip">설계 결정</li><li class="chip quiet">데이터 격리</li><li class="chip quiet">PostgreSQL</li></ul>
-<h1>행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기</h1>
-<p class="lead">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p>
-<p class="meta"><span class="by">heysep</span><time datetime="2026-10-06">2026년 10월 6일</time><span>읽는 데 7분</span></p>
+<header class="blk post-head">
+<span class="big-no" aria-hidden="true">03</span>
+<div class="blk-top"><span class="lb">No.03 / 설계 결정</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
+<div><h1>행 수준 보안(RLS)을 <mark>일부러 안 쓰기로</mark> 한 이야기</h1>
+<p class="lead">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p></div>
+<p class="blk-foot" style="margin:0"><span class="lb">By heysep</span><span class="lb">7 min read</span><span class="lb">데이터 격리</span> <span class="lb">PostgreSQL</span></p>
 </header>
 <div class="post-grid">
+<nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></nav>
 <div class="prose">
-<details class="toc-m"><summary>이 글의 목차</summary><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></details>
+<details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></details>
 <h2 id="s1">왜 RLS 가 끌렸을까요<a class="anchor" href="#s1" aria-label="이 절의 링크">#</a></h2>
 <p>한 DB 에 여러 고객을 두는 방식에서는 모든 조회에 「이 고객의 데이터만」이라는 조건을 붙여야 해요. 코드를 짜는 사람이 한 번만 깜빡해도 조건이 빠진 조회가 생기고, 그 조회는 남의 행까지 돌려줘요. RLS 는 이 조건을 DB 가 대신 강제해 줘요. 내가 깜빡해도 DB 가 막아 주는 「안전망」이라서 처음엔 당연히 써야 한다고 생각했어요.</p>
 <p>그런데 공식 문서를 읽어 보니 기본 동작부터 조심할 것이 있었어요. PostgreSQL 문서(18.6 판)는 이렇게 말해요.</p>
@@ -88,18 +89,17 @@
 <p>그래서 고객 한 명의 데이터 크기를 바꿔 가며 재현율을 따로 쟀고, 작은 고객은 인덱스를 거치지 않고 정확하게 찾도록 바꿨어요. 이 측정은 합성 벡터로만 했고 실제 임베딩, 운영 규모, 동시 접속은 확인 못 했어요. 큰 고객의 재현율 손실은 어떤 설정으로도 속도 기준을 지키며 해결하지 못해서 그대로 남아 있어요.</p>
 <p>돌아보면 RLS 를 안 쓰기로 한 것보다 중요한 건, 결과를 보기 전에 합격선을 적어 두었다는 점이에요. 마음에 드는 도구여도 실험 결과가 반대로 나올 수 있고, 그때 접을 수 있는 이유를 미리 만들어 둔 셈이에요.</p>
 </div>
-<nav class="toc" aria-label="이 글의 목차"><h2>목차</h2><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></nav>
 </div>
 </article>
-<div class="post-end"><hr class="rule">
-<div class="pn one"><a class="prev" href="../can-i-trust-this-answer/"><span class="dir">이전 글</span><span class="tt">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</span></a></div>
-<div class="sec-h"><h2>다른 글</h2></div><ul class="cards" style="grid-template-columns:minmax(0,1fr)"><li><a class="card" href="../chunking-by-format/"><ul class="chips"><li class="chip">검색 품질</li><li class="chip quiet">청킹</li><li class="chip quiet">RAG</li></ul><h3>청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요</h3><p>표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</p><span class="foot"><time datetime="2026-10-06">2026년 10월 6일</time><span>읽는 데 6분</span><span class="go" aria-hidden="true">읽기</span></span></a></li>
+<div class="post-end">
+<div class="pn one"><a class="prev" href="../can-i-trust-this-answer/"><span class="dir">이전 글 / No.02</span><span class="tt">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</span></a></div>
+<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>검색 품질</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
 </ul>
-<p><a href="../">글 목록으로 돌아가기</a></p></div>
+<a class="back" href="../">글 목록으로 돌아가기</a></div>
 </main>
-<footer class="site-foot"><div class="in">
-<div><a class="brand" href="../"><svg viewBox="0 0 26 26" aria-hidden="true"><rect class="m-bg" width="26" height="26" rx="7"/><path class="m-fg" d="M8 9h10M8 13.5h10M8 18h6" fill="none" stroke-width="2" stroke-linecap="round"/></svg><span>공부 노트</span></a><p>개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 IBM Plex(SIL OFL 1.1)예요.</p></div>
+<footer class="site-foot blk"><div class="foot-row">
+<p>개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
 <nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
-</div></footer>
+</div><a class="brand foot-big" href="../">공부 노트</a></footer>
 </body>
 </html>

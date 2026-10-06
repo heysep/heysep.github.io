@@ -2,7 +2,6 @@
 // 스타일은 3d.css 의 토큰만 바꾸면 돼요. 이 파일은 색 값을 직접 갖지 않아요(없을 때 쓸 기본값만).
 
 export const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
-export const schemeMQ = matchMedia('(prefers-color-scheme: dark)');
 const lightMQ = matchMedia('(max-width: 860px), (pointer: coarse)');
 
 /** 폭이 좁거나 터치 위주인 기기 → 점 수 · 해상도 · 안티앨리어싱을 줄여요. */
