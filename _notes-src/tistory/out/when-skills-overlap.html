@@ -1,4 +1,4 @@
-<p style="margin:0 0 1.6em;font-size:1.08em;line-height:1.9;color:#222">AI 에게 일을 시키는 규칙을 스킬(skill) 문서로 하나씩 만들다 보니, 어느 순간 「다 됐어요」 한 번에 스킬 서너 개가 동시에 걸렸어요. 겹치는 스킬은 있으나 마나가 아니라 믿을 수 없는 상태가 됐고, 그래서 서열을 정했어요. 그 과정과 검수 스킬 하나가 실제로 어떻게 생겼는지 적어 둬요.</p>
+<p style="margin:0 0 1.6em;font-size:1.08em;line-height:1.9;color:#222">클로드 코드 스킬을 하나씩 만들다 보니 「다 됐어요」 한 번에 스킬 서너 개가 동시에 걸렸어요. 겹치는 스킬은 있으나 마나가 아니라 믿을 수 없는 상태가 돼서 서열을 정했고, 그 과정과 검수 스킬 하나가 실제로 어떻게 생겼는지 적어 둬요.</p>
 <div style="margin:0 0 2em;padding:18px 22px;border:2px solid #111111;border-radius:12px;box-shadow:6px 6px 0 #C6F432"><strong style="display:block;margin-bottom:8px;font-size:.85em;letter-spacing:.08em">핵심 요약</strong><ul style="margin:0;padding-left:1.2em;line-height:1.8"><li style="margin:.3em 0">「다 됐어요」 순간에 스킬 셋이 겹쳐 걸려서, 증거 → 검수 → 응답 순서로 역할을 갈랐어요.</li><li style="margin:.3em 0">검수 스킬은 지적마다 반증을 시도하고 80점 미만을 버리며, 못 돌린 검사는 통과가 아니라 판정 불가로 적어요.</li><li style="margin:.3em 0">효과는 수치로 비교하지 못했고, 규칙 일부는 공개된 자료에서 가져왔어요.</li></ul></div>
 <h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">스킬이 겹치면 매번 다른 게 걸려요</h2>
 <p style="margin:0 0 1.1em;line-height:1.9">스킬은 설명 문장을 보고 모델이 골라 써요. 「완료」라는 순간에 걸리는 스킬이 증거 규칙, 코드 검수, 응답 점검 세 개였는데, 셋 다 비슷한 말(「다 됐다」)에 반응했어요. 그러면 어떤 날은 증거 규칙만, 어떤 날은 검수만 돌아요. 같은 상황에서 결과가 매번 달라지면 어느 쪽도 믿을 수 없어요.</p>
@@ -34,7 +34,7 @@
 <p style="margin:0 0 1.1em;line-height:1.9">이 중 몇 가지(다중 렌즈, 80점 컷, 증거 우선)는 공개된 검수 플러그인과 다른 사람의 글에서 가져왔어요. 거기 적힌 사례 수치는 제가 다시 재현하지 않았기 때문에 이 글에는 옮기지 않았어요.</p>
 
 <h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">문서로 쓴 규칙은 한계가 있어요</h2>
-<p style="margin:0 0 1.1em;line-height:1.9">응답 점검 스킬은 사용자에게 실제로 지적받은 것만 목록에 넣어요. 새로 지적받으면 목록이 늘고, 목록이 길어지면 아무도 안 보니까 죽은 항목은 지워요. 그리고 이 규칙 전부가 읽고 지키는 규칙이라는 한계를 스킬 문서에 직접 적어 뒀어요. 무시해도 아무 일도 안 일어나요. 같은 항목을 두 번 어겼다면 문서를 더 쓸 일이 아니라 <a href="https://heysep.github.io/notes/trust-the-record-not-the-report/">훅으로 옮길 일</a>이라고요.</p>
+<p style="margin:0 0 1.1em;line-height:1.9">응답 점검 스킬은 사용자에게 실제로 지적받은 것만 목록에 넣어요. 새로 지적받으면 목록이 늘고, 목록이 길어지면 아무도 안 보니까 죽은 항목은 지워요. 그리고 이 규칙 전부가 읽고 지키는 규칙이라는 한계를 스킬 문서에 직접 적어 뒀어요. 무시해도 아무 일도 안 일어나요. 같은 항목을 두 번 어겼다면 문서를 더 쓸 일이 아니라 <a href="https://heysep.tistory.com/entry/hooks-for-done-claims">훅으로 옮길 일</a>이라고요.</p>
 <p style="margin:0 0 1.1em;line-height:1.9">게이트가 죽었는지 확인하는 방법도 적어 뒀어요. 최근 열 턴 동안 이 게이트가 실제로 무언가를 멈춰 세운 적이 없다면, 잘 지키고 있는 것이거나 죽은 것이에요. 둘을 가르려면 일부러 걸릴 초안(「대부분 통과했습니다」)을 넣어 보고 경고가 실제로 켜지는지 봐요. 이 점검을 정기적으로 돌리고 있다고는 말하지 못해요.</p>
 
 <h2 style="margin:2.4em 0 .8em;padding-left:12px;border-left:6px solid #C6F432;font-size:1.45em;line-height:1.4">배운 것</h2>

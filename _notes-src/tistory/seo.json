@@ -1,0 +1,80 @@
+{
+ "trust-the-record-not-the-report": {
+  "title": "클로드 코드 훅으로 「다 됐어요」를 믿지 않게 만든 방법",
+  "tags": [
+   "클로드 코드 훅",
+   "클로드 코드 훅 사용법",
+   "Claude Code hooks",
+   "클로드 코드",
+   "AI 코딩 에이전트",
+   "에이전트 검증",
+   "훅",
+   "AI 작업 환경"
+  ],
+  "slug": "hooks-for-done-claims"
+ },
+ "when-skills-overlap": {
+  "title": "클로드 코드 스킬이 겹칠 때: 증거·검수·응답 서열로 정리한 방법",
+  "tags": [
+   "클로드 코드 스킬",
+   "클로드 코드 스킬 사용법",
+   "클로드 코드 스킬 만들기",
+   "Claude Code skills",
+   "스킬 설계",
+   "검수",
+   "AI 에이전트"
+  ],
+  "slug": "skills-overlap-gate-order"
+ },
+ "two-apps-in-toss-ranking": {
+  "title": "앱인토스 후기: 순위에 든 두 앱의 커밋을 거꾸로 읽어 봤어요",
+  "tags": [
+   "앱인토스",
+   "앱인토스 후기",
+   "앱인토스 수익",
+   "앱인토스 광고",
+   "토스 미니앱",
+   "청년미래적금",
+   "적금 메이트",
+   "앱 성과"
+  ],
+  "slug": "two-toss-apps-ranking-commits"
+ },
+ "parallel-agents-with-orca": {
+  "title": "클로드 코드 병렬 실행: ORCA와 git worktree로 에이전트 나누기",
+  "tags": [
+   "ORCA",
+   "git worktree",
+   "워크트리",
+   "병렬 에이전트",
+   "클로드 코드",
+   "오픈코드",
+   "Codex",
+   "에이전트 검증"
+  ],
+  "slug": "parallel-agents-orca-worktrees"
+ },
+ "can-i-trust-this-answer": {
+  "title": "RAG 답변 근거와 인용 검증: 근거 없으면 없다고 말하게 하기",
+  "tags": [
+   "RAG",
+   "RAG 인용",
+   "RAG 답변 신뢰",
+   "근거 인용",
+   "LLM 환각",
+   "답의 신뢰"
+  ],
+  "slug": "rag-answer-trust-citations"
+ },
+ "why-i-skipped-rls": {
+  "title": "PostgreSQL RLS(행 수준 보안)를 일부러 안 쓴 이유",
+  "tags": [
+   "PostgreSQL RLS",
+   "행 수준 보안",
+   "데이터 격리",
+   "멀티테넌트",
+   "설계 결정"
+  ],
+  "slug": "why-i-skipped-rls"
+ }
+}

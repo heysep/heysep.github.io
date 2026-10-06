@@ -1,0 +1,8 @@
+{
+ "trust-the-record-not-the-report": "hooks-for-done-claims",
+ "when-skills-overlap": "skills-overlap-gate-order",
+ "two-apps-in-toss-ranking": "two-toss-apps-ranking-commits",
+ "parallel-agents-with-orca": "parallel-agents-orca-worktrees",
+ "can-i-trust-this-answer": "rag-answer-trust-citations",
+ "why-i-skipped-rls": "why-i-skipped-rls"
+}
