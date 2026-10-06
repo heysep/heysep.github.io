@@ -5,7 +5,7 @@
 <link href="https://heysep.github.io/notes/feed.xml" rel="self"/>
 <link href="https://heysep.github.io/notes/"/>
 <id>https://heysep.github.io/notes/</id>
-<updated>2026-10-06T09:00:00+09:00</updated>
+<updated>2026-10-07T09:00:00+09:00</updated>
 <author><name>heysep</name></author>
 <entry>
 <title>청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요</title>
@@ -54,5 +54,13 @@
 <updated>2026-10-06T09:00:00+09:00</updated>
 <category term="1인 앱 개발" label="1인 앱 개발"/>
 <summary>청년미래적금과 적금 메이트의 커밋 이력을 다시 읽고, 무엇이 중요했는지 정리해요. 순위는 시점이 붙은 스냅샷이라는 점부터 적어요.</summary>
+</entry>
+<entry>
+<title>에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요</title>
+<link href="https://heysep.github.io/notes/parallel-agents-with-orca/"/>
+<id>https://heysep.github.io/notes/parallel-agents-with-orca/</id>
+<updated>2026-10-07T09:00:00+09:00</updated>
+<category term="1인 앱 개발" label="1인 앱 개발"/>
+<summary>여러 일을 한 세션에서 시키니 맥락이 섞였어요. ORCA로 워크트리를 나누고 다른 모델에게 검증을 맡긴 과정과, 확인 못 한 것을 적어요.</summary>
 </entry>
 </feed>

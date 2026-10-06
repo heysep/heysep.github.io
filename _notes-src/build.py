@@ -25,6 +25,9 @@ posts=[
  dict(slug='two-apps-in-toss-ranking',src='f.html',date='2026-10-06',mins=8,category='1인 앱 개발',
   title='앱인토스 순위에 든 두 앱, 커밋을 거꾸로 읽어 봤어요',
   desc='청년미래적금과 적금 메이트의 커밋 이력을 다시 읽고, 무엇이 중요했는지 정리해요. 순위는 시점이 붙은 스냅샷이라는 점부터 적어요.'),
+ dict(slug='parallel-agents-with-orca',src='g.html',date='2026-10-07',mins=7,category='1인 앱 개발',
+  title='에이전트 하나로는 안 돌아가서 워크트리로 갈랐어요',
+  desc='여러 일을 한 세션에서 시키니 맥락이 섞였어요. ORCA로 워크트리를 나누고 다른 모델에게 검증을 맡긴 과정과, 확인 못 한 것을 적어요.'),
 ]
 
 import shutil
@@ -35,6 +38,7 @@ posts[2].update(cat='설계 결정',tags=['데이터 격리','PostgreSQL'])
 posts[3].update(cat='AI 작업 환경',tags=['훅','검증'])
 posts[4].update(cat='스킬 설계',tags=['스킬','검수'])
 posts[5].update(cat='앱 성과',tags=['앱인토스','광고'])
+posts[6].update(cat='병렬 에이전트',tags=['ORCA','워크트리'])
 CODE_LABELS={('a.html',0):'CSV',('a.html',1):'JSON',('b.html',0):'화면 예시'}
 def dk(d):
     y,m,dd=d.split('-'); return f'{y}.{int(m):02d}.{int(dd):02d}'
@@ -45,7 +49,7 @@ HAVE=[c for c in CATS if CNT[c]]
 def have_note():
     # 아직 글이 없는 분류가 있으면 사실대로 알려요. 글이 생기면 이 문장은 저절로 사라져요.
     return '' if len(HAVE)==len(CATS) else f' 지금은 {" · ".join(HAVE)} 글이 있어요.'
-posts[0]['hl']='형식마다 다르게'; posts[1]['hl']='근거가 없으면 없다고'; posts[2]['hl']='일부러 안 쓰기로'; posts[3]['hl']='훅을 만들었어요'; posts[4]['hl']='서열을 정했어요'; posts[5]['hl']='커밋을 거꾸로'
+posts[0]['hl']='형식마다 다르게'; posts[1]['hl']='근거가 없으면 없다고'; posts[2]['hl']='일부러 안 쓰기로'; posts[3]['hl']='훅을 만들었어요'; posts[4]['hl']='서열을 정했어요'; posts[5]['hl']='커밋을 거꾸로'; posts[6]['hl']='워크트리로 갈랐어요'
 def title_html(p):
     t=html.escape(p['title']); h=html.escape(p['hl']); assert h in t
     return t.replace(h,'<mark>'+h+'</mark>',1)
@@ -141,7 +145,7 @@ def stage_html():
 # assets
 for f in ('notes.css','notes.js'): shutil.copy(os.path.join(B,f),os.path.join(OUT,'assets',f))
 # list
-TOPIC={'앱 성과':'만든 앱이 어떤 성과를 냈는지, 커밋을 거꾸로 읽으면서 무엇이 중요했는지 정리해요. 숫자는 시점과 범위를 붙여서 적어요.','스킬 설계':'AI 에게 주는 규칙 문서(스킬)가 겹치고 어긋날 때 어떻게 정리했는지, 직접 쓰고 고친 기록이에요.','AI 작업 환경':'AI 에게 일을 시킬 때 규칙이 실제로 지켜지는지 기록으로 확인하는 방법이에요. 만들어 보고 한계까지 적어요.','검색 품질':'자료를 어떻게 자르고 색인하느냐에 따라 같은 질문의 답이 달라져요. 잘못 잘린 자리를 눈으로 찾아본 기록이에요.',
+TOPIC={'병렬 에이전트':'에이전트 여러 개를 동시에 돌리면서 작업공간을 나누고 서로를 검증하게 한 방법이에요. 못 재 본 것도 같이 적어요.','앱 성과':'만든 앱이 어떤 성과를 냈는지, 커밋을 거꾸로 읽으면서 무엇이 중요했는지 정리해요. 숫자는 시점과 범위를 붙여서 적어요.','스킬 설계':'AI 에게 주는 규칙 문서(스킬)가 겹치고 어긋날 때 어떻게 정리했는지, 직접 쓰고 고친 기록이에요.','AI 작업 환경':'AI 에게 일을 시킬 때 규칙이 실제로 지켜지는지 기록으로 확인하는 방법이에요. 만들어 보고 한계까지 적어요.','검색 품질':'자료를 어떻게 자르고 색인하느냐에 따라 같은 질문의 답이 달라져요. 잘못 잘린 자리를 눈으로 찾아본 기록이에요.',
  '답의 신뢰':'근거가 없을 때 없다고 말하게 하고, 인용이 진짜인지 서버가 확인하게 하는 방법을 적어요.',
  '설계 결정':'선택지를 놓고 실험하고, 무엇을 고르고 무엇을 버렸는지 이유와 함께 남겨요.'}
 topics=''.join(f'''<li><h3>{html.escape(p['cat'])}</h3><p>{TOPIC[p['cat']]}</p><a href="{p['slug']}/" aria-label="{html.escape(p['title'])} 읽기">이 주제의 글 읽기</a></li>
