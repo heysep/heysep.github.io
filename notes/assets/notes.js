@@ -46,4 +46,23 @@
     });
     head.appendChild(b);
   });
+  // 3D: data-3d 가 있는 페이지에서만, 화면에 가까워질 때 3d/*.js 를 불러와요. 실패하면 정적 대체가 남아요.
+  var mounts = document.querySelectorAll('[data-3d]');
+  if (mounts.length) {
+    var me = document.currentScript || document.querySelector('script[src$="assets/notes.js"]');
+    var base = me && me.src ? new URL('3d/', me.src) : null;
+    mounts.forEach(function (el) {
+      var fail = function () { el.classList.add('is-fallback'); };
+      if (!base || !('IntersectionObserver' in window)) return fail();
+      var io = new IntersectionObserver(function (es) {
+        if (!es.some(function (e) { return e.isIntersecting; })) return;
+        io.disconnect();
+        import(new URL(el.getAttribute('data-3d') + '.js', base).href)
+          .then(function (m) { return m.default(el); })
+          .then(function (ok) { if (!ok) fail(); })
+          .catch(fail);
+      }, { rootMargin: '600px' });
+      io.observe(el);
+    });
+  }
 })();

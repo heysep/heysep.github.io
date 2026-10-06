@@ -230,3 +230,25 @@ td:first-child { font-weight: 600; white-space: nowrap; }
   .card { padding: 24px 22px 22px; }
   .site-nav a { padding: 0 10px; }
 }
+
+/* 글 안 도식(정지된 평면 그림) — 같은 표를 두 방식으로 자른 모습. 글자는 본문 크기. */
+.cut-fig { --cut-warn: #8A4B0F; margin: 2.2em 0; }
+@media (prefers-color-scheme: dark) { .cut-fig { --cut-warn: #E0A458; } }
+.cut-src, .cut-col { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 18px 20px; }
+.cut-src { margin: 0 0 16px; }
+.cut-h { margin: 0 0 6px !important; font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.5; }
+.cut-s { margin: 0 0 14px !important; font-size: 17px; line-height: 1.65; color: var(--muted); }
+.cut-src table { min-width: 0; width: 100%; margin: 10px 0 0; font-size: 17px; background: var(--raised); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.cut-src th, .cut-src td { padding: 6px 12px; border-bottom: 1px solid var(--border); font-size: 17px; }
+.cut-src th { color: var(--muted); }
+.cut-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.cut-col ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.cut-col li { margin: 0; padding: 10px 14px; border-radius: 10px; background: var(--raised); font-size: 17px; line-height: 1.55; }
+.cut-col li::marker { content: ""; }
+.cut-a li { border: 2px dashed var(--cut-warn); }
+.cut-a .ln { display: block; }
+.cut-a .tg { display: block; margin-top: 4px; font-size: 15px; font-weight: 700; color: var(--cut-warn); }
+.cut-b li { border: 1px solid var(--border-strong); border-left: 5px solid var(--accent); display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 0 18px; }
+.cut-b .cell b { display: block; font-size: 15px; font-weight: 700; color: var(--accent); }
+.cut-fig figcaption { margin-top: 14px; text-align: left; font-size: 15px; line-height: 1.6; }
+@media (max-width: 760px) { .cut-cols { grid-template-columns: minmax(0, 1fr); } }

@@ -55,6 +55,15 @@
 
 <p>CSV 의 셀 안 줄바꿈이 제일 의외였어요. 파서는 따옴표 안의 줄바꿈을 한 셀로 읽는데, 그 셀을 글로 풀어 쓸 때 줄이 나뉘면 두 번째 줄부터는 어느 열의 값인지 알 수 없어요. 중첩 JSON 은 더 심했어요. 주문 내역처럼 고객·주소·상품 옵션이 겹겹이 들어 있는 파일에서, 겉 키 한두 개만 조각에 남고 나머지 값은 거의 없었어요. 검색은 조각 글을 대상으로 하니까, 글에 없는 값은 아무리 잘 물어도 찾을 수 없어요.</p>
 
+<figure class="cut-fig" id="chunk-fig" aria-labelledby="chunk-fig-cap">
+<div class="cut-src"><p class="cut-h">원본 표 (지어낸 값)</p><table><thead><tr><th scope="col">이름</th><th scope="col">분류</th><th scope="col">메모</th></tr></thead><tbody><tr><td>라온</td><td>공지</td><td>첫째 줄 둘째 줄은 이어진 글</td></tr><tr><td>미르</td><td>행사</td><td>간단 메모</td></tr><tr><td>새봄</td><td>안내</td><td>접수 마감</td></tr></tbody></table></div>
+<div class="cut-cols">
+<section class="cut-col cut-a" aria-label="글자 수로 자르면"><p class="cut-h">① 글자 수로 자르면</p><p class="cut-s">길이만 보고 일정하게 잘라요. 셀 한가운데서 끊기고, 조각 대부분에 열 이름이 없어요.</p><ol><li><span class="ln">이름,분류,메모</span><span class="ln">라온,공지,</span><span class="tg">행이 중간에서 끊겨요</span></li><li><span class="ln">&quot;첫째 줄</span><span class="ln">둘째 줄은 이어진</span><span class="tg">열 이름 없음 · 셀이 갈라져요</span></li><li><span class="ln">글&quot;</span><span class="ln">미르,행사,간단 메모</span><span class="tg">열 이름 없음</span></li><li><span class="ln">새봄,안내,접수 마감</span><span class="tg">열 이름 없음</span></li></ol></section>
+<section class="cut-col cut-b" aria-label="구조 보고 자르면"><p class="cut-h">② 구조 보고 자르면</p><p class="cut-s">행을 가운데서 자르지 않고, 조각마다 열 이름을 같이 둬요.</p><ol><li><span class="cell"><b>이름</b>라온</span><span class="cell"><b>분류</b>공지</span><span class="cell"><b>메모</b>첫째 줄 둘째 줄은 이어진 글</span></li><li><span class="cell"><b>이름</b>미르</span><span class="cell"><b>분류</b>행사</span><span class="cell"><b>메모</b>간단 메모</span></li><li><span class="cell"><b>이름</b>새봄</span><span class="cell"><b>분류</b>안내</span><span class="cell"><b>메모</b>접수 마감</span></li></ol></section>
+</div>
+<figcaption id="chunk-fig-cap">그림: 같은 장난감 표를 글자 수로 자를 때(점선 칸이 조각 하나)와 구조를 보고 자를 때예요. 값은 모두 지어낸 것이에요.</figcaption>
+</figure>
+
 <h2 id="s3">작은 예시로 보면<a class="anchor" href="#s3" aria-label="이 절의 링크">#</a></h2>
 <p>장난감 데이터로 두 가지를 그려 볼게요. 먼저 CSV 예요. 둘째 행의 메모 칸에 줄바꿈이 들어 있어요.</p>
 <div class="code"><div class="code-head"><span>CSV</span></div><pre><code>이름,분류,메모
