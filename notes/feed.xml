@@ -31,4 +31,28 @@
 <category term="RAG" label="RAG"/>
 <summary>여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</summary>
 </entry>
+<entry>
+<title>「다 됐어요」를 믿지 않으려고 훅을 만들었어요</title>
+<link href="https://heysep.github.io/notes/trust-the-record-not-the-report/"/>
+<id>https://heysep.github.io/notes/trust-the-record-not-the-report/</id>
+<updated>2026-10-06T09:00:00+09:00</updated>
+<category term="1인 앱 개발" label="1인 앱 개발"/>
+<summary>문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.</summary>
+</entry>
+<entry>
+<title>스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요</title>
+<link href="https://heysep.github.io/notes/when-skills-overlap/"/>
+<id>https://heysep.github.io/notes/when-skills-overlap/</id>
+<updated>2026-10-06T09:00:00+09:00</updated>
+<category term="1인 앱 개발" label="1인 앱 개발"/>
+<summary>「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.</summary>
+</entry>
+<entry>
+<title>앱인토스 순위에 든 두 앱, 커밋을 거꾸로 읽어 봤어요</title>
+<link href="https://heysep.github.io/notes/two-apps-in-toss-ranking/"/>
+<id>https://heysep.github.io/notes/two-apps-in-toss-ranking/</id>
+<updated>2026-10-06T09:00:00+09:00</updated>
+<category term="1인 앱 개발" label="1인 앱 개발"/>
+<summary>청년미래적금과 적금 메이트의 커밋 이력을 다시 읽고, 무엇이 중요했는지 정리해요. 순위는 시점이 붙은 스냅샷이라는 점부터 적어요.</summary>
+</entry>
 </feed>

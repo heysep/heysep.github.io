@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>「다 됐어요」를 믿지 않으려고 훅을 만들었어요 — 공부 노트</title>
+<meta name="description" content="문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="공부 노트">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:section" content="1인 앱 개발">
+<meta property="og:title" content="「다 됐어요」를 믿지 않으려고 훅을 만들었어요 — 공부 노트">
+<meta property="og:description" content="문서에 적은 규칙은 안 지켜져서, 세션 기록으로 판정할 수 있는 규칙만 훅으로 옮겼어요. 무엇을 덮고 무엇을 일부러 안 덮는지 적어요.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
+<!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="../assets/favicon.svg"> 를 여기에 -->
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/notes.css">
+<script src="../assets/notes.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-head"><div class="in">
+<a class="brand" href="../">공부 노트</a>
+<nav class="site-nav" aria-label="사이트"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
+</div></header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<main id="main">
+<article>
+<header class="blk post-head">
+<span class="big-no" aria-hidden="true">04</span>
+<div class="blk-top"><span class="lb">No.04 / 1인 앱 개발 / AI 작업 환경</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
+<div><h1>「다 됐어요」를 믿지 않으려고 <mark>훅을 만들었어요</mark></h1>
+<p class="lead">AI 에게 일을 시키면서 「다 됐습니다」라는 말을 믿어도 되나 싶은 순간이 여러 번 있었어요. 규칙을 문서에 적어 두는 것으로는 안 지켜졌고, 그래서 규칙 일부를 훅(hook)으로 옮겼어요. 어떤 것을 옮겼고 무엇은 못 덮는지 적어 둬요.</p></div>
+<p class="blk-foot" style="margin:0"><span class="lb">By heysep</span><span class="lb">6 min read</span><span class="lb">훅</span> <span class="lb">검증</span></p>
+</header>
+<div class="post-grid">
+<nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">문서에 적은 규칙은 안 지켜졌어요</a></li><li><a href="#s2">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</a></li><li><a href="#s3">일부러 좁게 만든 부분</a></li><li><a href="#s4">막을지 알릴지는 따로 정했어요</a></li><li><a href="#s5">배운 것</a></li></ol></nav>
+<div class="prose">
+<details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">문서에 적은 규칙은 안 지켜졌어요</a></li><li><a href="#s2">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</a></li><li><a href="#s3">일부러 좁게 만든 부분</a></li><li><a href="#s4">막을지 알릴지는 따로 정했어요</a></li><li><a href="#s5">배운 것</a></li></ol></details>
+<h2 id="s1">문서에 적은 규칙은 안 지켜졌어요<a class="anchor" href="#s1" aria-label="이 절의 링크">#</a></h2>
+<p>처음에는 「고친 뒤에는 테스트를 돌려라」 같은 규칙을 스킬 문서에 적었어요. 모델은 그 문서를 읽고 대체로 따르지만, 항상은 아니에요. 길게 이어진 작업일수록 중간에 빠졌고, 빠졌다는 사실도 응답에서는 보이지 않았어요. 규칙이 지켜졌는지를 모델의 자기보고로 확인하는 건 확인이 아니라는 걸 알게 됐어요.</p>
+<p>그래서 기준을 바꿨어요. <strong>지켜졌는지를 기록으로 판정할 수 있는 규칙만 코드로 옮긴다</strong>예요. 「좋은 코드를 써라」는 코드로 옮길 수 없지만 「소스를 고친 뒤에 테스트 명령이 한 번이라도 돌았는가」는 옮길 수 있어요.</p>
+
+<h2 id="s2">첫 번째: 테스트 없이 끝내지 않았는지 보는 훅<a class="anchor" href="#s2" aria-label="이 절의 링크">#</a></h2>
+<p>Claude Code 는 턴이 끝날 때(Stop)와 도구를 쓰기 직전(PreToolUse)에 사용자가 지정한 명령을 실행할 수 있어요. 이 명령이 세션 기록 파일(JSONL)의 경로를 받아요. 기록에는 도구 호출이 시간순으로 쌓여 있어서 「무엇을 언제 했는가」를 사실로 읽을 수 있어요.</p>
+<p>Stop 훅이 하는 일은 단순해요. 기록을 처음부터 읽으면서 두 가지를 순서대로 기록해요.</p>
+<ul>
+<li>소스 파일(<code>.py</code>, <code>.dart</code>, <code>.ts</code> 등)을 편집한 도구 호출과 그 순번</li>
+<li>테스트 명령(<code>pytest</code>, <code>flutter test</code>, <code>npm test</code> 등)을 실행한 도구 호출과 그 순번</li>
+</ul>
+<p>그리고 <strong>마지막 테스트보다 뒤에 편집된 소스 파일</strong>이 있으면 목록으로 알려요. 「테스트를 몇 번 돌렸나」가 아니라 「마지막 테스트가 마지막 편집을 덮었나」를 보는 거예요. 편집 → 테스트 → 편집이면 마지막 편집은 검증되지 않은 것으로 쳐요.</p>
+<div class="code"><div class="code-head"><span>코드</span></div><pre><code>def untested_edits(transcript_path):
+    last_test_seq = 0
+    edits = {}  # 경로 -> 마지막으로 편집한 순번
+    for seq, name, inp in iter_tool_uses(transcript_path):
+        if ran_tests(name, inp):
+            last_test_seq = seq
+        elif is_source_edit(name, inp):
+            edits[inp["file_path"]] = seq
+    return sorted(p for p, s in edits.items() if s &gt; last_test_seq)</code></pre></div>
+<p>같은 판정 함수를 커밋 직전 훅도 써요. 소스를 고친 뒤 테스트가 한 번도 안 돌았으면 <code>git commit</code> 을 막아요. 판정을 한 곳에 두면 두 훅이 서로 다른 말을 할 일이 없어요.</p>
+
+<h2 id="s3">일부러 좁게 만든 부분<a class="anchor" href="#s3" aria-label="이 절의 링크">#</a></h2>
+<p>이 훅은 아는 것만 판정해요. 몇 군데는 일부러 덮지 않았어요.</p>
+<div class="table-wrap" role="region" aria-label="표(가로로 스크롤할 수 있어요)" tabindex="0"><table>
+<thead><tr><th>덮지 않는 것</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td>린트·정적 분석 실행</td><td>타입이 맞는 것과 동작이 맞는 것은 다른 축이라서 테스트로 치지 않아요</td></tr>
+<tr><td>문서·설정만 고친 경우</td><td>소스 확장자만 편집으로 세요. 문서를 고쳤다고 테스트를 요구하면 게이트가 아니라 방해가 돼요</td></tr>
+<tr><td>셸로 한 편집(<code>sed -i</code>, 리다이렉션)</td><td>기록에는 Bash 호출로만 남고 어떤 파일이 바뀌었는지 알 수 없어요. 알려진 사각지대로 코드에 적어 뒀어요</td></tr>
+<tr><td>기록 파일을 못 읽는 경우</td><td>통과시켜요. 훅이 고장 났다고 사용자의 작업이 막히면 안 돼서, 못 읽으면 열어 두는 쪽으로 실패해요</td></tr>
+</tbody></table></div>
+
+<h2 id="s4">막을지 알릴지는 따로 정했어요<a class="anchor" href="#s4" aria-label="이 절의 링크">#</a></h2>
+<p>Stop 훅은 지금 알리기만 하고 막지는 않아요(<code>MODE = "warn"</code>). 이 설정이 전역이라 동시에 열려 있는 다른 세션에도 바로 적용되는데, 남의 작업 중간을 막는 건 이 훅이 할 일이 아니라고 봤어요. 막는 모드(exit code 2 로 턴을 되돌리고 이유를 모델에게 돌려주는 방식)도 구현해 뒀지만 켜지 않았어요. 켜면 어떻게 되는지는 아직 확인하지 못했어요.</p>
+<p>비밀 파일 보호 훅은 반대로 막아요. <code>.env</code>, <code>.secrets/</code>, 서명 키 같은 파일을 Edit/Write 로 덮어쓰려는 시도를 거절해요. 읽는 것은 막지 않아요. 막으려는 건 값을 보는 일이 아니라 덮어써서 자격증명을 잃는 일이라서요. 경로를 부분 문자열이 아니라 <strong>경로 구간</strong>으로 비교해요. 부분 문자열로 하면 <code>secrets_page.dart</code> 같은 평범한 소스가 걸려서, 실제로 그럴 뻔했어요.</p>
+<p>이 훅들에는 테스트도 붙였어요. 「편집 뒤 테스트가 돌았으면 통과」 「편집 → 테스트 → 편집이면 여전히 미검증」 「문서만 고쳤으면 무시」 「기록 파일이 없으면 통과」 같은 경우를 케이스로 나눠 확인해요.</p>
+
+<h2 id="s5">배운 것<a class="anchor" href="#s5" aria-label="이 절의 링크">#</a></h2>
+<ul>
+<li>규칙을 문서에 적는 것과 강제하는 것은 달라요. 기록으로 판정할 수 있는 규칙만 훅으로 옮겨요.</li>
+<li>판정은 「횟수」가 아니라 「순서」로 해요. 마지막 편집이 마지막 검증보다 뒤인가를 봐요.</li>
+<li>훅이 못 덮는 것은 코드 주석에 적어 둬요. 안 적으면 훅이 통과시킨 것을 검증된 것으로 착각하게 돼요.</li>
+<li>처음부터 막지 말고 먼저 알리기만 해요. 오탐이 얼마나 나는지 보고 나서 막는 쪽으로 올려요.</li>
+</ul>
+<p>확인하지 못한 것도 있어요. 이 훅으로 실제 결함이 줄었는지는 수치로 비교하지 못했어요. 지금 말할 수 있는 건 「테스트 없이 끝나는 턴이 기록에서 보이게 됐다」까지예요.</p>
+</div>
+</div>
+</article>
+<div class="post-end">
+<div class="pn one"><a class="next" href="../when-skills-overlap/"><span class="dir">다음 글 / No.05</span><span class="tt">스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요</span></a></div>
+<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li data-cat="1인 앱 개발"><a class="row" href="../two-apps-in-toss-ranking/"><span class="n"><span class="lb">No.</span><b>06</b></span><span class="t">앱인토스 순위에 든 두 앱, 커밋을 거꾸로 읽어 봤어요<span class="d">청년미래적금과 적금 메이트의 커밋 이력을 다시 읽고, 무엇이 중요했는지 정리해요. 순위는 시점이 붙은 스냅샷이라는 점부터 적어요.</span></span><span class="g lb"><b>1인 앱 개발</b><span><time datetime="2026-10-06">2026.10.06</time> / 8 MIN</span></span></a></li>
+<li data-cat="RAG"><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
+<li data-cat="RAG"><a class="row" href="../can-i-trust-this-answer/"><span class="n"><span class="lb">No.</span><b>02</b></span><span class="t">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기<span class="d">근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
+<li data-cat="RAG"><a class="row" href="../why-i-skipped-rls/"><span class="n"><span class="lb">No.</span><b>03</b></span><span class="t">행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기<span class="d">여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 7 MIN</span></span></a></li>
+</ul>
+<a class="back" href="../">글 목록으로 돌아가기</a></div>
+</main>
+<footer class="site-foot blk"><div class="foot-row">
+<p>RAG와 1인 앱 개발을 공부하며 적는 개인 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
+<nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
+</div></footer>
+</body>
+</html>

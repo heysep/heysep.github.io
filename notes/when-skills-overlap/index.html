@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요 — 공부 노트</title>
+<meta name="description" content="「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="공부 노트">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:section" content="1인 앱 개발">
+<meta property="og:title" content="스킬이 겹치면 매번 다른 게 걸려서 서열을 정했어요 — 공부 노트">
+<meta property="og:description" content="「다 됐어요」 순간에 스킬 세 개가 동시에 걸렸어요. 역할을 갈라 순서를 정하고, 검수 스킬이 오탐과 못 본 것을 다루는 방식을 적어요.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
+<!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="../assets/favicon.svg"> 를 여기에 -->
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../assets/notes.css">
+<script src="../assets/notes.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-head"><div class="in">
+<a class="brand" href="../">공부 노트</a>
+<nav class="site-nav" aria-label="사이트"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
+</div></header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<main id="main">
+<article>
+<header class="blk post-head">
+<span class="big-no" aria-hidden="true">05</span>
+<div class="blk-top"><span class="lb">No.05 / 1인 앱 개발 / 스킬 설계</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
+<div><h1>스킬이 겹치면 매번 다른 게 걸려서 <mark>서열을 정했어요</mark></h1>
+<p class="lead">AI 에게 일을 시키는 규칙을 스킬(skill) 문서로 하나씩 만들다 보니, 어느 순간 「다 됐어요」 한 번에 스킬 서너 개가 동시에 걸렸어요. 겹치는 스킬은 있으나 마나가 아니라 믿을 수 없는 상태가 됐고, 그래서 서열을 정했어요. 그 과정과 검수 스킬 하나가 실제로 어떻게 생겼는지 적어 둬요.</p></div>
+<p class="blk-foot" style="margin:0"><span class="lb">By heysep</span><span class="lb">7 min read</span><span class="lb">스킬</span> <span class="lb">검수</span></p>
+</header>
+<div class="post-grid">
+<nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">스킬이 겹치면 매번 다른 게 걸려요</a></li><li><a href="#s2">UI 작업이나 영상 작업도 같은 방식으로 정리했어요</a></li><li><a href="#s3">검수 스킬 하나를 뜯어 보면</a></li><li><a href="#s4">문서로 쓴 규칙은 한계가 있어요</a></li><li><a href="#s5">배운 것</a></li></ol></nav>
+<div class="prose">
+<details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">스킬이 겹치면 매번 다른 게 걸려요</a></li><li><a href="#s2">UI 작업이나 영상 작업도 같은 방식으로 정리했어요</a></li><li><a href="#s3">검수 스킬 하나를 뜯어 보면</a></li><li><a href="#s4">문서로 쓴 규칙은 한계가 있어요</a></li><li><a href="#s5">배운 것</a></li></ol></details>
+<h2 id="s1">스킬이 겹치면 매번 다른 게 걸려요<a class="anchor" href="#s1" aria-label="이 절의 링크">#</a></h2>
+<p>스킬은 설명 문장을 보고 모델이 골라 써요. 「완료」라는 순간에 걸리는 스킬이 증거 규칙, 코드 검수, 응답 점검 세 개였는데, 셋 다 비슷한 말(「다 됐다」)에 반응했어요. 그러면 어떤 날은 증거 규칙만, 어떤 날은 검수만 돌아요. 같은 상황에서 결과가 매번 달라지면 어느 쪽도 믿을 수 없어요.</p>
+<p>해결은 스킬을 더 잘 쓰는 게 아니라 <strong>역할을 갈라서 순서를 정하는 것</strong>이었어요. 세 스킬에 각각 한 가지 질문만 맡겼어요.</p>
+<div class="table-wrap" role="region" aria-label="표(가로로 스크롤할 수 있어요)" tabindex="0"><table>
+<thead><tr><th>순서</th><th>질문</th><th>성격</th></tr></thead>
+<tbody>
+<tr><td>1. 증거 규칙</td><td>검증 명령을 이번에 돌렸나</td><td>판단이 아니라 사실 확인이에요. 훅이 기계적으로 같은 걸 잡아요</td></tr>
+<tr><td>2. 코드 검수</td><td>결함이 있나</td><td>찾고, 오탐을 걸러 내고, 심각도 순으로 보고해요</td></tr>
+<tr><td>3. 응답 점검</td><td>보여주는 방식이 사용자를 화나게 하나</td><td>코드가 맞는지가 아니라 응답을 봐요</td></tr>
+</tbody></table></div>
+<p>세 개를 하나로 합치지 않았어요. 합치면 문서가 길어져서 모델이 앞부분만 읽고, 어느 단계에서 실패했는지도 흐려져요. 이 서열은 스킬 설명이 아니라 전역 지침 파일에 적었어요. 플러그인으로 받은 스킬은 업데이트되면 설명이 원래대로 돌아가기 때문이에요.</p>
+
+<h2 id="s2">UI 작업이나 영상 작업도 같은 방식으로 정리했어요<a class="anchor" href="#s2" aria-label="이 절의 링크">#</a></h2>
+<p>화면 만들기에는 검색용 DB, 구현, 차트 같은 도구 스킬이 여럿 있어요. 그래서 <strong>진입점 스킬 하나</strong>를 두고, 나머지는 그 안에서 단계별로 불러 쓰는 도구로 정했어요. 사용자가 부르는 스킬은 하나고, 나머지는 그 스킬이 부를 때만 써요. 스킬을 새로 만들기 전에는 이미 같은 일을 하는 스킬이 있는지 먼저 보는 규칙도 넣었어요. 읽지 않고 만든 스킬은 기존 스킬과 겹치면서 어느 쪽이 걸릴지 흔들렸기 때문이에요.</p>
+
+<h2 id="s3">검수 스킬 하나를 뜯어 보면<a class="anchor" href="#s3" aria-label="이 절의 링크">#</a></h2>
+<p>검수 스킬은 「볼 것 목록」이 아니라 실패 모드 두 가지만 막아요. 증거 없이 통과시키는 것, 오탐으로 사람 시간을 태우는 것이에요. 철칙도 두 줄이에요.</p>
+<div class="code"><div class="code-head"><span>코드</span></div><pre><code>1. 실행하지 않은 명령의 결과는 주장할 수 없다.
+2. 확신도 80점 미만의 지적은 보고하지 않는다.</code></pre></div>
+<p>절차에서 효과가 컸다고 느낀 부분은 이래요. 다만 수치로 비교하지는 못했어요.</p>
+<ul>
+<li><strong>지적마다 반증을 먼저 시도해요.</strong> 「이건 오탐이다」를 증명해 보고 실패할 때만 살려요. 그리고 0~100점을 매겨 80 미만은 버려요. 버린 개수만 한 줄로 적어요.</li>
+<li><strong>지적에는 실패 시나리오가 있어야 해요.</strong> 「에러 처리 개선 필요」는 시나리오가 아니에요. 어떤 입력에서 어떤 잘못된 출력이 나오는지까지 써야 해요.</li>
+<li><strong>못 돌린 검사는 통과가 아니라 「판정 불가」예요.</strong> 보고 끝에 「돌린 렌즈 / 전체 렌즈 / 판정 불가」 세 숫자를 적고, 판정 불가가 하나라도 있으면 「출시해도 됨」을 쓰지 않아요.</li>
+<li><strong>같은 지적이 세 번 나오면 패치를 멈춰요.</strong> 네 번째 패치 대신 설계를 바꾸거나, 한계로 인정하거나, 그 기능을 없애요.</li>
+<li><strong>마지막 렌즈는 다른 모델이에요.</strong> 같은 모델이 보면 같은 맹점을 공유한다고 보고, 되돌리기 어려운 변경은 다른 모델의 검토 통과를 완료 조건에 넣었어요.</li>
+</ul>
+<p>이 중 몇 가지(다중 렌즈, 80점 컷, 증거 우선)는 공개된 검수 플러그인과 다른 사람의 글에서 가져왔어요. 거기 적힌 사례 수치는 제가 다시 재현하지 않았기 때문에 이 글에는 옮기지 않았어요.</p>
+
+<h2 id="s4">문서로 쓴 규칙은 한계가 있어요<a class="anchor" href="#s4" aria-label="이 절의 링크">#</a></h2>
+<p>응답 점검 스킬은 사용자에게 실제로 지적받은 것만 목록에 넣어요. 새로 지적받으면 목록이 늘고, 목록이 길어지면 아무도 안 보니까 죽은 항목은 지워요. 그리고 이 규칙 전부가 읽고 지키는 규칙이라는 한계를 스킬 문서에 직접 적어 뒀어요. 무시해도 아무 일도 안 일어나요. 같은 항목을 두 번 어겼다면 문서를 더 쓸 일이 아니라 <a href="../trust-the-record-not-the-report/">훅으로 옮길 일</a>이라고요.</p>
+<p>게이트가 죽었는지 확인하는 방법도 적어 뒀어요. 최근 열 턴 동안 이 게이트가 실제로 무언가를 멈춰 세운 적이 없다면, 잘 지키고 있는 것이거나 죽은 것이에요. 둘을 가르려면 일부러 걸릴 초안(「대부분 통과했습니다」)을 넣어 보고 경고가 실제로 켜지는지 봐요. 이 점검을 정기적으로 돌리고 있다고는 말하지 못해요.</p>
+
+<h2 id="s5">배운 것<a class="anchor" href="#s5" aria-label="이 절의 링크">#</a></h2>
+<ul>
+<li>스킬은 개수가 아니라 겹침이 문제예요. 같은 순간에 걸리는 스킬은 질문을 하나씩 나눠 맡기고 순서를 정해요.</li>
+<li>서열은 스킬 설명이 아니라 업데이트에 덮이지 않는 곳에 적어요.</li>
+<li>검수는 목록이 아니라 필터예요. 오탐을 버리는 규칙과 못 본 것을 못 봤다고 적는 규칙이 같이 있어야 보고를 믿을 수 있어요.</li>
+<li>문서 규칙을 두 번 어기면 훅으로 옮겨요.</li>
+</ul>
+</div>
+</div>
+</article>
+<div class="post-end">
+<div class="pn"><a class="prev" href="../trust-the-record-not-the-report/"><span class="dir">이전 글 / No.04</span><span class="tt">「다 됐어요」를 믿지 않으려고 훅을 만들었어요</span></a><a class="next" href="../two-apps-in-toss-ranking/"><span class="dir">다음 글 / No.06</span><span class="tt">앱인토스 순위에 든 두 앱, 커밋을 거꾸로 읽어 봤어요</span></a></div>
+<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li data-cat="RAG"><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
+<li data-cat="RAG"><a class="row" href="../can-i-trust-this-answer/"><span class="n"><span class="lb">No.</span><b>02</b></span><span class="t">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기<span class="d">근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
+<li data-cat="RAG"><a class="row" href="../why-i-skipped-rls/"><span class="n"><span class="lb">No.</span><b>03</b></span><span class="t">행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기<span class="d">여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 7 MIN</span></span></a></li>
+</ul>
+<a class="back" href="../">글 목록으로 돌아가기</a></div>
+</main>
+<footer class="site-foot blk"><div class="foot-row">
+<p>RAG와 1인 앱 개발을 공부하며 적는 개인 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
+<nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
+</div></footer>
+</body>
+</html>
