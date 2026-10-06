@@ -8,6 +8,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="공부 노트">
 <meta property="og:locale" content="ko_KR">
+<meta property="article:section" content="RAG">
 <meta property="og:title" content="행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기 — 공부 노트">
 <meta property="og:description" content="여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.">
 <meta name="color-scheme" content="light">
@@ -29,7 +30,7 @@
 <article>
 <header class="blk post-head">
 <span class="big-no" aria-hidden="true">03</span>
-<div class="blk-top"><span class="lb">No.03 / 설계 결정</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
+<div class="blk-top"><span class="lb">No.03 / RAG / 설계 결정</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
 <div><h1>행 수준 보안(RLS)을 <mark>일부러 안 쓰기로</mark> 한 이야기</h1>
 <p class="lead">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p></div>
 <p class="blk-foot" style="margin:0"><span class="lb">By heysep</span><span class="lb">7 min read</span><span class="lb">데이터 격리</span> <span class="lb">PostgreSQL</span></p>
@@ -93,12 +94,12 @@
 </article>
 <div class="post-end">
 <div class="pn one"><a class="prev" href="../can-i-trust-this-answer/"><span class="dir">이전 글 / No.02</span><span class="tt">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</span></a></div>
-<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>검색 품질</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
+<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li data-cat="RAG"><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
 </ul>
 <a class="back" href="../">글 목록으로 돌아가기</a></div>
 </main>
 <footer class="site-foot blk"><div class="foot-row">
-<p>개인 공부 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
+<p>RAG와 1인 앱 개발을 공부하며 적는 개인 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
 <nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
 </div><a class="brand foot-big" href="../">공부 노트</a></footer>
 </body>

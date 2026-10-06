@@ -169,6 +169,20 @@ tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
 .row { position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr) 220px; column-gap: 32px; align-items: start; padding: 30px 0 32px; border-top: 1px solid var(--soft); color: var(--ink); transition: background-color .15s; }
 .rows li:first-child .row { border-top-color: var(--ink); }
 .rows li:last-child .row { border-bottom: 1px solid var(--ink); }
+.rows li[hidden] { display: none; }
+.rows li.first .row { border-top-color: var(--ink); } .rows li.last .row { border-bottom: 1px solid var(--ink); }
+/* 분류 필터: 컨테이너 없는 모노 라벨 + 1px 선. 눌린 탭 = 라임 면 + 아래 굵은 선(색만으로 구분하지 않아요) */
+.idx-h:has(+ .cats) { padding-bottom: 14px; }
+.cats { display: flex; flex-wrap: wrap; margin: 0; padding: 0; border-top: 1px solid var(--soft); }
+.cats[hidden] { display: none; }
+.cats button { appearance: none; border: 0; background: transparent; color: var(--ink); cursor: pointer; min-height: 44px; padding: 0 18px; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; transition: background-color .15s; }
+.cats button + button { border-left: 1px solid var(--soft); }
+.cats button .lb { font-size: 12px; color: inherit; }
+.cats button .ct { color: var(--meta); }
+.cats button:hover { background: var(--hi); }
+.cats button[aria-pressed="true"] { background: var(--hi); box-shadow: inset 0 -3px 0 var(--ink); }
+.cats button[aria-pressed="true"] .ct, .cats button:hover .ct { color: var(--on-hi); }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .row:hover { background: var(--hi); box-shadow: -40px 0 0 var(--hi), 40px 0 0 var(--hi); }
 .row .n { display: flex; flex-direction: column; gap: 6px; color: var(--meta); }
 .row .n b { font: 700 clamp(44px, 5.4vw, 80px)/.9 var(--disp); letter-spacing: -.05em; color: var(--ink); }

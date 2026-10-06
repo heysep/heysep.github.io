@@ -34,6 +34,26 @@
     }, { passive: true });
     setOn(heads[0].id);
   }
+  // 분류 필터: JS 가 있을 때만 탭이 보이고, 없으면 모든 글이 그대로 보여요.
+  var bar = document.querySelector('.cats');
+  if (bar) {
+    var btns = Array.prototype.slice.call(bar.querySelectorAll('button'));
+    var items = Array.prototype.slice.call(document.querySelectorAll('.rows li[data-cat]'));
+    var note = document.querySelector('.idx .vh');
+    var apply = function (cat) {
+      var shown = [];
+      items.forEach(function (li) {
+        var off = cat !== 'all' && li.getAttribute('data-cat') !== cat;
+        li.hidden = off; li.classList.remove('first', 'last');
+        if (!off) shown.push(li);
+      });
+      if (shown.length) { shown[0].classList.add('first'); shown[shown.length - 1].classList.add('last'); }
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cat') === cat ? 'true' : 'false'); });
+      if (note) note.textContent = (cat === 'all' ? '전체' : cat) + ' 글 ' + shown.length + '편';
+    };
+    btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.getAttribute('data-cat')); }); });
+    bar.hidden = false;
+  }
   document.querySelectorAll('.code').forEach(function (box) {
     var head = box.querySelector('.code-head'), pre = box.querySelector('pre');
     if (!head || !pre || !navigator.clipboard) return;
