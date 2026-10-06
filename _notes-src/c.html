@@ -1,61 +1,22 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기 — 공부 노트</title>
-<meta name="description" content="여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="공부 노트">
-<meta property="og:locale" content="ko_KR">
-<meta property="article:section" content="RAG">
-<meta property="og:title" content="행 수준 보안(RLS)을 일부러 안 쓰기로 한 이야기 — 공부 노트">
-<meta property="og:description" content="여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#FFFFFF">
-<link rel="alternate" type="application/atom+xml" title="공부 노트" href="../feed.xml">
-<!-- 파비콘 자리: 아직 없어요. 만들면 <link rel="icon" href="../assets/favicon.svg"> 를 여기에 -->
-<link rel="stylesheet" href="../assets/fonts/fonts.css">
-<link rel="stylesheet" href="../assets/notes.css">
-<script src="../assets/notes.js" defer></script>
-</head>
-<body>
-<a class="skip" href="#main">본문으로 건너뛰기</a>
-<header class="site-head"><div class="in">
-<a class="brand" href="../">공부 노트</a>
-<nav class="site-nav" aria-label="사이트"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
-</div></header>
-<div class="progress" aria-hidden="true"><i></i></div>
-<main id="main">
-<article>
-<header class="blk post-head">
-<span class="big-no" aria-hidden="true">03</span>
-<div class="blk-top"><span class="lb">No.03 / RAG / 설계 결정</span><span class="lb"><time datetime="2026-10-06">2026.10.06</time></span></div>
-<div><h1>행 수준 보안(RLS)을 <mark>일부러 안 쓰기로</mark> 한 이야기</h1>
-<p class="lead">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p></div>
-<p class="blk-foot" style="margin:0"><span class="lb">By heysep</span><span class="lb">7 min read</span><span class="lb">데이터 격리</span> <span class="lb">PostgreSQL</span></p>
-</header>
-<div class="post-grid">
-<nav class="toc" aria-label="이 글의 목차"><h2>Contents</h2><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></nav>
-<div class="prose">
-<details class="toc-m"><summary>Contents</summary><ol><li><a href="#s1">왜 RLS 가 끌렸을까요</a></li><li><a href="#s2">결과를 보기 전에 합격선부터 적었어요</a></li><li><a href="#s3">RLS 는 잘 막았어요</a></li><li><a href="#s4">그런데 조용히 틀렸어요</a></li><li><a href="#s5">그래서 앱 계층에서 이렇게 막아요</a></li><li><a href="#s6">격리는 검색 품질 문제이기도 해요</a></li></ol></details>
-<h2 id="s1">왜 RLS 가 끌렸을까요<a class="anchor" href="#s1" aria-label="이 절의 링크">#</a></h2>
+<p class="lead">여러 고객의 데이터를 한 DB 에 두면 「남의 데이터가 내 화면에 보이는 사고」가 제일 무서워요. 그래서 PostgreSQL 의 행 수준 보안(RLS)을 공부했고, 실험까지 해 본 뒤에 일부러 쓰지 않기로 했어요. 그 과정을 적어요.</p>
+
+<h2>왜 RLS 가 끌렸을까요</h2>
 <p>한 DB 에 여러 고객을 두는 방식에서는 모든 조회에 「이 고객의 데이터만」이라는 조건을 붙여야 해요. 코드를 짜는 사람이 한 번만 깜빡해도 조건이 빠진 조회가 생기고, 그 조회는 남의 행까지 돌려줘요. RLS 는 이 조건을 DB 가 대신 강제해 줘요. 내가 깜빡해도 DB 가 막아 주는 「안전망」이라서 처음엔 당연히 써야 한다고 생각했어요.</p>
 <p>그런데 공식 문서를 읽어 보니 기본 동작부터 조심할 것이 있었어요. PostgreSQL 문서(18.6 판)는 이렇게 말해요.</p>
 <blockquote><p>Superusers and roles with the <code>BYPASSRLS</code> attribute always bypass the row security system when accessing a table. Table owners normally bypass row security as well, though a table owner can choose to be subject to row security with ALTER TABLE ... FORCE ROW LEVEL SECURITY.</p></blockquote>
 <p>출처: <a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">PostgreSQL 문서, Row Security Policies</a>. 풀어 쓰면, 슈퍼유저와 우회 권한이 있는 역할은 항상 정책을 건너뛰고, 표 주인도 기본은 건너뛰어요. 앱이 DB 에 어떤 역할로 접속하느냐에 따라 안전망이 통째로 꺼질 수 있다는 뜻이에요.</p>
 
-<h2 id="s2">결과를 보기 전에 합격선부터 적었어요<a class="anchor" href="#s2" aria-label="이 절의 링크">#</a></h2>
+<h2>결과를 보기 전에 합격선부터 적었어요</h2>
 <p>RLS 를 좋아하는 마음으로 실험하면 결과도 좋게 읽게 돼요. 그래서 측정하기 전에 <strong>후보와 합격선을 먼저 문서에 적고 고정</strong>했어요. 결과를 본 뒤에는 그 부분을 고치지 않는다는 규칙이에요. 후보는 네 가지였어요. RLS 없이 앱 계층을 강화하는 것, 일부 표에만 RLS, 모든 표에 RLS, 그리고 나중에 정하기예요.</p>
 <p>살펴본 관문은 이런 것들이에요. 실제로 새는 사례를 막아 주는지, 검색이 느려지지 않는지, 검색 재현율이 떨어지지 않는지, 적재 속도가 유지되는지, 기동과 마이그레이션이 되는지, 그리고 설정을 깜빡한 연결에서도 「닫혀 있는지」예요. 실험 데이터는 전부 지어낸 것이고 외부 호출 없이 로컬에서만 돌렸어요.</p>
 
-<h2 id="s3">RLS 는 잘 막았어요<a class="anchor" href="#s3" aria-label="이 절의 링크">#</a></h2>
+<h2>RLS 는 잘 막았어요</h2>
 <p>공정하게 적어 두면, RLS 는 약속한 일을 했어요. 앱의 조건이 빠진 사례를 일부러 만들어 돌리면 RLS 아래에서는 남의 행이 나오지 않았고, 설정을 안 건 새 연결은 0행이거나 오류로 닫혔어요. 백그라운드 작업이나 앱 코드 바깥의 SQL 처럼 앱 계층 방어로는 못 잡는 사례도 막았어요. 검색 재현율도 달라지지 않았고, 정책 자체가 속도에 주는 부담은 거의 없었어요.</p>
 <p>속도에서 불합격이 나온 건 정책 때문이 아니었어요. 질의마다 트랜잭션을 따로 열고 「지금 어느 고객인지」를 설정하는 <strong>래퍼</strong> 때문이었어요. 아주 작은 조회에서는 그 오버헤드가 두 배를 넘었어요. 요청 하나를 트랜잭션 하나로 묶으면 부담이 작아져서, 이건 설계를 바꾸면 풀리는 문제였어요.</p>
 
-<h2 id="s4">그런데 조용히 틀렸어요<a class="anchor" href="#s4" aria-label="이 절의 링크">#</a></h2>
+<h2>그런데 조용히 틀렸어요</h2>
 <p>결정을 바꾼 건 속도가 아니라 <strong>조용히 틀리는 곳</strong>이었어요.</p>
-<div class="table-wrap" role="region" aria-label="표(가로로 스크롤할 수 있어요)" tabindex="0"><table>
+<div class="table-wrap"><table>
 <thead><tr><th>상황</th><th>정책을 걸면</th></tr></thead>
 <tbody>
 <tr><td>조직 전체의 저장량을 합산하는 한도 검사</td><td>정책이 다른 컬렉션의 행을 숨겨서 합계가 실제보다 줄어요. 한도를 넘는 업로드가 통과해요</td></tr>
@@ -77,7 +38,7 @@
 </div>
 </aside>
 
-<h2 id="s5">그래서 앱 계층에서 이렇게 막아요<a class="anchor" href="#s5" aria-label="이 절의 링크">#</a></h2>
+<h2>그래서 앱 계층에서 이렇게 막아요</h2>
 <ul>
 <li>조건 없는 쿼리를 코드에서 못 쓰게 하는 장치를 만들었어요. 고객 범위가 정해진 핸들로만 DB 에 접근하게 해서, 조건을 빼먹으면 컴파일이나 시험에서 먼저 걸려요.</li>
 <li>「고객 A 의 자격으로 모든 경로를 고객 B 의 id 로 호출」해 보는 시험을 만들었어요. 응답이 없는 id 와 똑같아야 하고, B 의 데이터는 하나도 바뀌지 않아야 해요.</li>
@@ -85,22 +46,7 @@
 </ul>
 <p>이 선택이 <strong>못 막는 것</strong>도 분명해요. RLS 가 막아 줄 백그라운드 작업, 앱 코드 바깥의 SQL, 응답 시간 같은 부수 채널은 앱 계층 방어로는 못 막아요. RLS 는 「미래의 실수에 대한 보험」이고, 그 보험을 안 들기로 한 거예요. 코드를 훑어 본 결과 지금까지 조건이 빠진 곳은 확인되지 않았지만, 이 조사는 소스의 문자열을 읽는 근사라서 동적으로 이어 붙인 쿼리는 못 봐요. 그리고 실험 당시에 「앱 계층이 이 사례를 잡는가」 칸은 실제로 돌려 본 게 아니라 내 판단이었어요. 그건 확인 못 했어요. 교차 호출 시험은 그 뒤에 만들었어요.</p>
 
-<h2 id="s6">격리는 검색 품질 문제이기도 해요<a class="anchor" href="#s6" aria-label="이 절의 링크">#</a></h2>
+<h2>격리는 검색 품질 문제이기도 해요</h2>
 <p>이 공부에서 하나 더 배운 게 있어요. 격리는 보안만이 아니라 검색 품질에도 걸려 있어요. 벡터 검색의 근사 인덱스는 조건 필터를 인덱스를 훑은 <em>뒤에</em> 적용해요. pgvector 의 README 도 이렇게 적어요. 「With approximate indexes, filtering is applied after the index is scanned.」 그래서 고객이 많아서 필터가 걸러 내는 비율이 커지면 돌려주는 결과가 모자라질 수 있어요. 같은 문서가 고객 격리에는 파티션이나 표 분리를 권해요(<a href="https://github.com/pgvector/pgvector/blob/master/README.md">pgvector README</a>).</p>
 <p>그래서 고객 한 명의 데이터 크기를 바꿔 가며 재현율을 따로 쟀고, 작은 고객은 인덱스를 거치지 않고 정확하게 찾도록 바꿨어요. 이 측정은 합성 벡터로만 했고 실제 임베딩, 운영 규모, 동시 접속은 확인 못 했어요. 큰 고객의 재현율 손실은 어떤 설정으로도 속도 기준을 지키며 해결하지 못해서 그대로 남아 있어요.</p>
 <p>돌아보면 RLS 를 안 쓰기로 한 것보다 중요한 건, 결과를 보기 전에 합격선을 적어 두었다는 점이에요. 마음에 드는 도구여도 실험 결과가 반대로 나올 수 있고, 그때 접을 수 있는 이유를 미리 만들어 둔 셈이에요.</p>
-</div>
-</div>
-</article>
-<div class="post-end">
-<div class="pn one"><a class="prev" href="../can-i-trust-this-answer/"><span class="dir">이전 글 / No.02</span><span class="tt">이 답을 믿어도 될까: 근거가 없으면 없다고 말하게 하기</span></a></div>
-<div class="sec-h"><h2>다른 글</h2></div><ul class="rows"><li data-cat="RAG"><a class="row" href="../chunking-by-format/"><span class="n"><span class="lb">No.</span><b>01</b></span><span class="t">청킹을 공부하며 알게 된 것: 형식마다 다르게 잘라야 해요<span class="d">표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</span></span><span class="g lb"><b>RAG</b><span><time datetime="2026-10-06">2026.10.06</time> / 6 MIN</span></span></a></li>
-</ul>
-<a class="back" href="../">글 목록으로 돌아가기</a></div>
-</main>
-<footer class="site-foot blk"><div class="foot-row">
-<p>RAG와 1인 앱 개발을 공부하며 적는 개인 기록이에요. 틀린 내용이 있을 수 있어요. 글꼴은 Pretendard · Inter Tight · JetBrains Mono(SIL OFL 1.1)예요.</p>
-<nav aria-label="푸터"><a href="../">글 목록</a><a href="../about/">소개</a><a href="../feed.xml">RSS</a></nav>
-</div><a class="brand foot-big" href="../">공부 노트</a></footer>
-</body>
-</html>

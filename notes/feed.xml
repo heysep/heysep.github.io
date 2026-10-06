@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">
 <title>공부 노트</title>
-<subtitle>공부하고 만들면서 배운 기술 기록</subtitle>
+<subtitle>RAG와 1인 앱 개발을 공부하고 만들면서 배운 것의 기록</subtitle>
 <link href="https://heysep.github.io/notes/feed.xml" rel="self"/>
 <link href="https://heysep.github.io/notes/"/>
 <id>https://heysep.github.io/notes/</id>
@@ -12,6 +12,7 @@
 <link href="https://heysep.github.io/notes/chunking-by-format/"/>
 <id>https://heysep.github.io/notes/chunking-by-format/</id>
 <updated>2026-10-06T09:00:00+09:00</updated>
+<category term="RAG" label="RAG"/>
 <summary>표 · JSON · CSV 를 같은 글자 수로 자르면 뜻이 같이 잘려요. 반례 파일을 만들어 눈으로 확인한 기록이에요.</summary>
 </entry>
 <entry>
@@ -19,6 +20,7 @@
 <link href="https://heysep.github.io/notes/can-i-trust-this-answer/"/>
 <id>https://heysep.github.io/notes/can-i-trust-this-answer/</id>
 <updated>2026-10-06T09:00:00+09:00</updated>
+<category term="RAG" label="RAG"/>
 <summary>근거 없으면 없다고 말하기, 인용을 서버가 검증하기, 거절 판정을 따로 두기. 무엇이 도움이 됐고 무엇은 못 가렸는지 적어요.</summary>
 </entry>
 <entry>
@@ -26,6 +28,7 @@
 <link href="https://heysep.github.io/notes/why-i-skipped-rls/"/>
 <id>https://heysep.github.io/notes/why-i-skipped-rls/</id>
 <updated>2026-10-06T09:00:00+09:00</updated>
+<category term="RAG" label="RAG"/>
 <summary>여러 고객의 데이터를 한 DB 에 두면서 RLS 를 실험하고, 조용히 틀리는 곳을 발견해 접은 과정이에요.</summary>
 </entry>
 </feed>
