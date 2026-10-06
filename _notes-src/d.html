@@ -1,7 +1,12 @@
 <p class="lead">AI 에게 일을 시키면서 「다 됐습니다」라는 말을 믿어도 되나 싶은 순간이 여러 번 있었어요. 규칙을 문서에 적어 두는 것으로는 안 지켜졌고, 그래서 규칙 일부를 훅(hook)으로 옮겼어요. 어떤 것을 옮겼고 무엇은 못 덮는지 적어 둬요.</p>
 
+<figure class="hero-fig"><img src="../assets/img/hero-hook.webp" width="1200" height="800" alt="상자가 검사 게이트를 지나가고, 체크 표시가 없는 상자만 차단봉에 막혀 있는 일러스트" decoding="async"><figcaption>체크가 없는 것은 통과하지 못해요 · ChatGPT 이미지 생성으로 만든 일러스트</figcaption></figure>
+
+
 <h2>문서에 적은 규칙은 안 지켜졌어요</h2>
 <p>처음에는 「고친 뒤에는 테스트를 돌려라」 같은 규칙을 스킬 문서에 적었어요. 모델은 그 문서를 읽고 대체로 따르지만, 항상은 아니에요. 길게 이어진 작업일수록 중간에 빠졌고, 빠졌다는 사실도 응답에서는 보이지 않았어요. 규칙이 지켜졌는지를 모델의 자기보고로 확인하는 건 확인이 아니라는 걸 알게 됐어요.</p>
+<figure class="hero-fig"><img src="../assets/img/hook-rules.webp" width="1200" height="800" alt="책장에 규칙 문서가 꽂혀 있는데, 상자들이 그 옆 컨베이어를 그냥 지나가는 일러스트" loading="lazy" decoding="async"><figcaption>규칙 문서는 책장에 있고, 일은 그 옆을 그냥 지나가요 · ChatGPT 이미지 생성</figcaption></figure>
+
 <p>그래서 기준을 바꿨어요. <strong>지켜졌는지를 기록으로 판정할 수 있는 규칙만 코드로 옮긴다</strong>예요. 「좋은 코드를 써라」는 코드로 옮길 수 없지만 「소스를 고친 뒤에 테스트 명령이 한 번이라도 돌았는가」는 옮길 수 있어요.</p>
 
 <h2>첫 번째: 테스트 없이 끝내지 않았는지 보는 훅</h2>
@@ -12,6 +17,8 @@
 <li>테스트 명령(<code>pytest</code>, <code>flutter test</code>, <code>npm test</code> 등)을 실행한 도구 호출과 그 순번</li>
 </ul>
 <p>그리고 <strong>마지막 테스트보다 뒤에 편집된 소스 파일</strong>이 있으면 목록으로 알려요. 「테스트를 몇 번 돌렸나」가 아니라 「마지막 테스트가 마지막 편집을 덮었나」를 보는 거예요. 편집 → 테스트 → 편집이면 마지막 편집은 검증되지 않은 것으로 쳐요.</p>
+<figure class="hero-fig"><img src="../assets/img/hook-sequence.webp" width="1200" height="800" alt="연필로 편집한 문서에 체크, 시험관으로 테스트해 체크, 마지막 연필로 편집한 문서에는 물음표가 붙은 순서도" loading="lazy" decoding="async"><figcaption>편집 → 테스트 → 편집이면, 마지막 편집(물음표)은 검증되지 않은 것이에요 · ChatGPT 이미지 생성</figcaption></figure>
+
 <pre><code>def untested_edits(transcript_path):
     last_test_seq = 0
     edits = {}  # 경로 -> 마지막으로 편집한 순번
@@ -35,6 +42,8 @@
 </tbody></table></div>
 
 <h2>막을지 알릴지는 따로 정했어요</h2>
+
+<figure class="hero-fig"><img src="../assets/img/hook-warn-block.webp" width="1200" height="800" alt="왼쪽은 램프가 켜져도 상자가 지나가고, 오른쪽은 차단봉이 상자를 막는 두 상태와 위쪽의 전환 스위치" loading="lazy" decoding="async"><figcaption>왼쪽은 알리기만 하고(지금 설정), 오른쪽은 막아요. 스위치는 설정 한 줄이에요 · ChatGPT 이미지 생성</figcaption></figure>
 <p>Stop 훅은 지금 알리기만 하고 막지는 않아요(<code>MODE = "warn"</code>). 이 설정이 전역이라 동시에 열려 있는 다른 세션에도 바로 적용되는데, 남의 작업 중간을 막는 건 이 훅이 할 일이 아니라고 봤어요. 막는 모드(exit code 2 로 턴을 되돌리고 이유를 모델에게 돌려주는 방식)도 구현해 뒀지만 켜지 않았어요. 켜면 어떻게 되는지는 아직 확인하지 못했어요.</p>
 <p>비밀 파일 보호 훅은 반대로 막아요. <code>.env</code>, <code>.secrets/</code>, 서명 키 같은 파일을 Edit/Write 로 덮어쓰려는 시도를 거절해요. 읽는 것은 막지 않아요. 막으려는 건 값을 보는 일이 아니라 덮어써서 자격증명을 잃는 일이라서요. 경로를 부분 문자열이 아니라 <strong>경로 구간</strong>으로 비교해요. 부분 문자열로 하면 <code>secrets_page.dart</code> 같은 평범한 소스가 걸려서, 실제로 그럴 뻔했어요.</p>
 <p>이 훅들에는 테스트도 붙였어요. 「편집 뒤 테스트가 돌았으면 통과」 「편집 → 테스트 → 편집이면 여전히 미검증」 「문서만 고쳤으면 무시」 「기록 파일이 없으면 통과」 같은 경우를 케이스로 나눠 확인해요.</p>

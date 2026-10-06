@@ -298,3 +298,7 @@ tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
 .rank-figs img { display: block; width: 100%; height: auto; border-radius: 10px; background: #18181c; }
 .rank-figs figcaption { margin-top: 6px; font: 500 12px/1.5 var(--mono); color: var(--meta); }
 .fig-note { font-size: 13px; color: var(--meta); margin-top: 0; }
+
+.hero-fig { margin: 1.4em 0 1.8em; }
+.hero-fig img { display: block; width: 100%; height: auto; border: 1px solid var(--soft); border-radius: 10px; background: #fff; }
+.hero-fig figcaption { margin-top: 6px; font: 500 12px/1.5 var(--mono); color: var(--meta); }
